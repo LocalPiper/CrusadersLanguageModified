@@ -15,15 +15,13 @@ This project includes a full toolchain:
 
 ## 🗂️ Table of Contents
 
-## 🗂️ Table of Contents
-
-- [🧾 Description](#description)
-- [🛡️ Team Members](#team-members)
-- [📜 Lexical Structure](#lexical-structure)
-- [🏗️ Parsing Rules](#parsing-rules)
-- [🗺️ Development Stages](#development-stages)
-  - [🌲 Stage 1 Treewalker](#stage-1-treewalker)
-  - [🛞 Stage 2 Assembly](#stage-2-assembly)
+- [🧾 Description](#-description)
+- [🛡️ Team Members](#%EF%B8%8F-team-members)
+- [📜 Lexical Structure](#-lexical-structure)
+- [🏗️ Parsing Rules](#%EF%B8%8F-parsing-rules)
+- [🗺️ Development Stages](#%EF%B8%8F-development-stages)
+  - [🌲 Stage 1 Treewalker](#-stage-1-treewalker)
+  - [🛞 Stage 2 Assembly](#-stage-2-assembly)
 
 
 ---

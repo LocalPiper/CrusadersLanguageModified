@@ -66,13 +66,14 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
-| 7   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 8   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 9   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 10   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 11   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 12   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 13   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
+| 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 
 ### 🛞 Stage 2: Assembly
 TODO

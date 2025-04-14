@@ -1,0 +1,8 @@
+henceforth n proclaim 7
+henceforth a proclaim 1
+henceforth i proclaim 1
+whilst gather i below n release summon
+  a proclaim a forge i
+  i proclaim i produce 1
+banish
+declare a

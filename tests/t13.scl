@@ -1,0 +1,21 @@
+henceforth n proclaim 10
+henceforth a proclaim 1
+henceforth b proclaim 1
+henceforth i proclaim 3
+prithee gather n claimeth 0 release summon
+  declare 0
+banish
+elsewise summon
+  prithee gather n below 2 release summon
+    declare 1
+  banish
+  elsewise summon
+    whilst gather i below n release summon
+      henceforth c proclaim a produce b
+      a proclaim b
+      b proclaim c
+      i proclaim i produce 1
+    banish
+    declare b
+  banish
+banish

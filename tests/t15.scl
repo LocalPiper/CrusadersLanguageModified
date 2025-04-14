@@ -1,0 +1,3 @@
+henceforth s1 proclaim "Hello, "
+henceforth s2 proclaim "world"
+declare s1 produce s2

@@ -1,0 +1,4 @@
+henceforth a proclaim 10
+henceforth b proclaim 4
+henceforth c proclaim a produce b
+declare c

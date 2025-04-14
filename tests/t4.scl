@@ -1,0 +1,4 @@
+henceforth x proclaim 20
+henceforth y proclaim 8
+henceforth z proclaim x deplete y
+declare z

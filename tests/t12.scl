@@ -1,0 +1,11 @@
+henceforth a proclaim 48
+henceforth b proclaim 18
+whilst gather b reject 0 release summon
+  prithee gather a greater b release summon
+    a proclaim a deplete b
+  banish
+  elsewise summon
+    b proclaim b deplete a
+  banish
+banish
+declare a

@@ -28,7 +28,7 @@ This project includes a full toolchain:
 
 ## 🧾 Description
 
-CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/LocalPiper/SCLanguage), continuing to follow the medieval theme of it's predecessor while including new features. This language is developed as a project for discipline "Compiler Developement" at University of ITMO.
+CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/LocalPiper/SCLanguage), continuing to follow the medieval theme of it's predecessor while including new features. This language is developed as a project for discipline "Compiler Development" at University of ITMO.
 
 ---
 
@@ -36,8 +36,8 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 
 | Name                     | Role                      |
 |--------------------------|---------------------------|
-| LocalPiper 🧙‍♂️            | Language Designer / Dev   |
-| uvusibuneka ⚜️    | Grammar Knight / Dev    |
+| [LocalPiper](https://github.com/LocalPiper) 🧙‍♂️            | Language Designer / Dev   |
+| [uvusibuneka](https://github.com/uvusibuneka) ⚜️    | Grammar Knight / Dev    |
 
 ---
 

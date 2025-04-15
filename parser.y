@@ -93,12 +93,12 @@ assignment:
           ;
 
 logical_or:
-          logical_and OR logical_and { $$ = new BinaryOpNode("||", $1, $3); }
+          logical_or OR logical_and { $$ = new BinaryOpNode("||", $1, $3); }
           | logical_and { $$ = $1; }
           ;
 
 logical_and:
-           equalty AND equalty { $$ = new BinaryOpNode("&&", $1, $3); }
+           logical_and AND equalty { $$ = new BinaryOpNode("&&", $1, $3); }
            | equalty { $$ = $1; }
            ;
 

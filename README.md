@@ -5,6 +5,7 @@
 CrusadersLanguageModified is a custom programming language forged with the ancient wisdom of **Flex**, **Bison**, and the legendary steel of **C++**. The language embraces a medieval aesthetic — every keyword speaks in the tongue of knights, squires, and lords.
 
 This project includes a full toolchain:
+
 - Lexical analyzer
 - Parser
 - Abstract Syntax Tree (AST)
@@ -23,7 +24,6 @@ This project includes a full toolchain:
   - [🌲 Stage 1 Treewalker](#-stage-1-treewalker)
   - [🛞 Stage 2 Assembly](#-stage-2-assembly)
 
-
 ---
 
 ## 🧾 Description
@@ -40,7 +40,6 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | [uvusibuneka](https://github.com/uvusibuneka) ⚜️    | Grammar Knight / Dev    |
 
 ---
-
 
 ## 📜 Lexical Structure
 
@@ -76,13 +75,14 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `IDENTIFIER`  | *(identifiers)*        | Variable/function names             |
 | `STRING`      | *(quoted text)*        | String literals                     |
 
-
 ## 🏗️ Parsing Rules
 
 TODO
 
 ## 🗺️ Development Stages
+
 Here is what we are going to implement in our language. Each task is marked with:
+
 - ✅ DONE
 - 🛠️ IN PROGRESS
 - ❌ NOT IMPLEMENTED
@@ -90,10 +90,11 @@ Here is what we are going to implement in our language. Each task is marked with
 Tasks can be mandatory (features that WILL be implemented) and additional (features that MAY be implemented)
 
 ### 🌲 Stage 1: Treewalker
+
 | #️⃣ | Feature Name         | Description                                     | Priority    | Status           |
 |-----|---------------------|-------------------------------------------------|-------------|------------------|
 | 1   | Lexer: New naming          | Rename keywords so they would make more sense  | ⚙️ Mandatory   | ✅ DONE         |
-| 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
+| 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | ✅ DONE         |
 | 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
@@ -108,4 +109,5 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 
 ### 🛞 Stage 2: Assembly
+
 TODO

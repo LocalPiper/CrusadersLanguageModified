@@ -6,31 +6,31 @@
 %%
 
 [0-9]+      { yylval.num = atoi(yytext); return NUMBER; }
-"produce"       { return PLUS; }
-"deplete"      { return MINUS; }
-"forge"        { return STAR; }
-"divide"       { return SLASH; }
+"amass"       { return PLUS; }
+"sacrifice"      { return MINUS; }
+"conjure"        { return STAR; }
+"split"       { return SLASH; }
 "claimeth"     { return EQ; }
-"lesser"       { return LT; }
-"greater"      { return GT; }
-"below"        { return LEQ; }
-"above"        { return GEQ; }
+"unworthy"       { return LT; }
+"mightier"      { return GT; }
+"nohigher"        { return LEQ; }
+"nobelow"        { return GEQ; }
 "reject"       { return NEQ; }
-"allied"       { return AND; }
-"or"           { return OR; }
+"united"       { return AND; }
+"either"           { return OR; }
 "deny"         { return NOT; }
-"gather"       { return OP; }
-"release"      { return CP; }
-"summon"       { return OB; }
-"banish"       { return CB; }
-"prithee"      { return IF; }
+"invoke"       { return OP; }
+"dismiss"      { return CP; }
+"commence"       { return OB; }
+"conclude"       { return CB; }
+"suppose"      { return IF; }
 "elsewise"     { return ELSE; }
-"whilst"       { return WHILE; }
+"aslongas"       { return WHILE; }
 "henceforth"   { return VAR; }
-"loyal"        { return TRUE; }
-"traitor"      { return FALSE; }
-"declare"      { return PRINT; }
-"proclaim"     { return ASSIGN; }
+"aye"        { return TRUE; }
+"nay"      { return FALSE; }
+"proclaim"      { return PRINT; }
+"bestow"     { return ASSIGN; }
 \n             { return EOL; }
 [ \t]          {}
 

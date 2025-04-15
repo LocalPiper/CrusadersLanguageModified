@@ -14,7 +14,7 @@ parser.tab.cpp: parser.y
 
 run-tests: all
 	@echo "Running tests...\n"
-	@for test in tests/t*.scl; do \
+	@for test in tests/t*.cl2; do \
 		echo "Running $$test..."; \
 		./clm < $$test; \
 		echo " "; \

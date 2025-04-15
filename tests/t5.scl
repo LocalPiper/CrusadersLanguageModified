@@ -1,6 +1,0 @@
-henceforth a proclaim 6
-henceforth b proclaim 3
-henceforth c proclaim a forge b
-henceforth d proclaim a divide b
-declare c
-declare d

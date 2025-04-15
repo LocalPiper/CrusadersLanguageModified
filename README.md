@@ -44,7 +44,38 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 
 ## 📜 Lexical Structure
 
-TODO
+| 🏷️ Token Name | 🧙‍♂️ Crusader Keyword | 🪄 Meaning / Description              |
+|---------------|------------------------|--------------------------------------|
+| `PLUS`        | `amass`                | Addition (`+`)                       |
+| `MINUS`       | `sacrifice`            | Subtraction (`-`)                    |
+| `STAR`        | `conjure`              | Multiplication (`*`)                |
+| `SLASH`       | `split`                | Division (`/`)                      |
+| `EQ`          | `claimeth`             | Equality (`==`)                     |
+| `LT`          | `unworthy`             | Less than (`<`)                     |
+| `GT`          | `mightier`             | Greater than (`>`)                  |
+| `LEQ`         | `nohigher`             | Less than or equal (`<=`)           |
+| `GEQ`         | `nobelow`              | Greater than or equal (`>=`)        |
+| `NEQ`         | `reject`               | Not equal (`!=`)                    |
+| `AND`         | `united`               | Logical AND (`&&`)                  |
+| `OR`          | `either`               | Logical OR (`\|\|`)                   |
+| `NOT`         | `deny`                 | Logical NOT (`!`)                   |
+| `OP`          | `invoke`               | Open parenthesis (`(`)              |
+| `CP`          | `dismiss`              | Close parenthesis (`)`)             |
+| `OB`          | `commence`             | Open block (`{`)                    |
+| `CB`          | `conclude`             | Close block (`}`)                   |
+| `IF`          | `suppose`              | If statement                        |
+| `ELSE`        | `elsewise`             | Else statement                      |
+| `WHILE`       | `aslongas`             | While loop                          |
+| `VAR`         | `henceforth`           | Variable declaration                |
+| `TRUE`        | `aye`                  | Boolean `true`                      |
+| `FALSE`       | `nay`                  | Boolean `false`                     |
+| `PRINT`       | `proclaim`             | Print statement                     |
+| `ASSIGN`      | `bestow`               | Assignment (`=`)                    |
+| `EOL`         | *(newline)*            | End of line                         |
+| `NUMBER`      | *(digits)*             | Integer literals                    |
+| `IDENTIFIER`  | *(identifiers)*        | Variable/function names             |
+| `STRING`      | *(quoted text)*        | String literals                     |
+
 
 ## 🏗️ Parsing Rules
 
@@ -60,7 +91,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 ### 🌲 Stage 1: Treewalker
 | #️⃣ | Feature Name         | Description                                     | Priority    | Status           |
 |-----|---------------------|-------------------------------------------------|-------------|------------------|
-| 1   | Lexer: New naming          | Rename keywords so they would make more sense  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
+| 1   | Lexer: New naming          | Rename keywords so they would make more sense  | ⚙️ Mandatory   | ✅ DONE         |
 | 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |

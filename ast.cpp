@@ -51,6 +51,16 @@ Value VariableNode::evaluate() const { return getVar(name); }
 
 Value BinaryOpNode::evaluate() const {
   Value leftVal = left->evaluate();
+  if (op == "&&") {
+    if (!isTruthy(leftVal))
+      return false;
+    return isTruthy(right->evaluate());
+  }
+  if (op == "||") {
+    if (isTruthy(leftVal))
+      return true;
+    return isTruthy(right->evaluate());
+  }
   Value rightVal = right->evaluate();
 
   if (holds_alternative<int>(leftVal) && holds_alternative<int>(rightVal)) {
@@ -77,10 +87,6 @@ Value BinaryOpNode::evaluate() const {
       return l == r;
     if (op == "!=")
       return l != r;
-    if (op == "||")
-      return l || r;
-    if (op == "&&")
-      return l && r;
   }
 
   if ((op == "+" || op == "==" || op == "!=") &&

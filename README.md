@@ -86,13 +86,14 @@ Here is what we are going to implement in our language. Each task is marked with
 - ✅ DONE
 - 🛠️ IN PROGRESS
 - ❌ NOT IMPLEMENTED
+
 Tasks can be mandatory (features that WILL be implemented) and additional (features that MAY be implemented)
 
 ### 🌲 Stage 1: Treewalker
 | #️⃣ | Feature Name         | Description                                     | Priority    | Status           |
 |-----|---------------------|-------------------------------------------------|-------------|------------------|
 | 1   | Lexer: New naming          | Rename keywords so they would make more sense  | ⚙️ Mandatory   | ✅ DONE         |
-| 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
+| 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
 | 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |

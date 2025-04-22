@@ -5,6 +5,7 @@
 
 %%
 
+[0-9]+\.[0-9]+ { yylval.dnum = atof(yytext); return DOUBLE; }
 [0-9]+      { yylval.num = atoi(yytext); return NUMBER; }
 "amass"       { return PLUS; }
 "sacrifice"      { return MINUS; }

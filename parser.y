@@ -20,11 +20,13 @@ ASTNode* root = nullptr;
 
 %union {
   int num;
+  double dnum;
   char* str;
   ASTNode *node;
 }
 
 %token <num> NUMBER
+%token <dnum> DOUBLE
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
@@ -138,6 +140,7 @@ primary:
        FALSE { $$ = new NumberNode(0); }
        | TRUE { $$ = new NumberNode(1); }
        | NUMBER { $$ = new NumberNode($1); }
+       | DOUBLE { $$ = new DoubleNode($1); }
        | IDENTIFIER { $$ = new VariableNode($1); }
        | STRING { $$ = new StringNode($1); }
        | OP expression CP { $$ = $2; }

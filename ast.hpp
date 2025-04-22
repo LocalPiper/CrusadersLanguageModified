@@ -6,12 +6,19 @@
 #include <vector>
 
 using namespace std;
-using Value = std::variant<int, string>;
+using Value = std::variant<int, double, string>;
 
 class ASTNode {
 public:
   virtual ~ASTNode() = default;
   virtual Value evaluate() const = 0;
+};
+
+class DoubleNode : public ASTNode {
+public:
+  double value;
+  DoubleNode(double val) : value(val) {}
+  Value evaluate() const override { return value; }
 };
 
 class NumberNode : public ASTNode {

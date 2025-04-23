@@ -34,9 +34,9 @@ ASTNode* root = nullptr;
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE FUNCTION COMMA
+%token IF ELSE OB CB WHILE FUNCTION COMMA RETURN
 %type <stmt> program
-%type <stmt> if_statement while_statement statement expression_statement print_statement function_declaration 
+%type <stmt> if_statement while_statement statement expression_statement print_statement function_declaration return_statement
 %type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
 %type <blk> block statements
 %type <strList> parameters
@@ -44,6 +44,7 @@ ASTNode* root = nullptr;
 
 %nonassoc IF
 %nonassoc ELSE
+%nonassoc RETURN
 
 %start program
 %%
@@ -72,6 +73,7 @@ statement:
          | while_statement { $$ = $1; }
          | block { $$ = $1; }
          | function_declaration { $$ = $1; }
+         | return_statement { $$ = $1; }
          ;
 
 function_declaration:
@@ -79,6 +81,11 @@ function_declaration:
                     $$ = new FunctionDeclarationNode($2, *$4, $6);
                     delete $4;
                     }
+                    ;
+
+return_statement:
+                RETURN expression EOL { $$ = new ReturnNode($2); }
+                ;
 
 parameters:
           IDENTIFIER { $$ = new vector<string>({ $1 }); }

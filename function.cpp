@@ -19,10 +19,13 @@ Value CrusaderFunction::call(const vector<Value> &args) const {
   for (int i = 0; i < params.size(); ++i) {
     createVar(params[i], args[i]);
   }
-
-  body->evaluate();
+  try {
+    body->evaluate();
+  } catch (ReturnException &ret) {
+    exitScope();
+    return ret.value;
+  }
 
   exitScope();
-
   return 0;
 }

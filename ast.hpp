@@ -152,4 +152,11 @@ public:
   Value evaluate() const override;
 };
 
+class ReturnNode : public StatementNode {
+public:
+  ExpressionNode *val;
+  ReturnNode(ExpressionNode *val) : val(val) {}
+  void evaluate() const override;
+};
+
 #endif // AST_HPP

@@ -215,9 +215,13 @@ void IfNode::evaluate() const {
 
 void BlockNode::evaluate() const {
   enterScope();
-  Value result = 0;
-  for (auto &statement : statements) {
-    statement->evaluate();
+  try {
+    for (auto &statement : statements) {
+      statement->evaluate();
+    }
+  } catch (ReturnException &ret) {
+    exitScope();
+    throw ret;
   }
   exitScope();
 }
@@ -243,3 +247,5 @@ Value FunctionCallNode::evaluate() const {
     argValues.push_back(arg->evaluate());
   return functionTable[name].call(argValues);
 }
+
+void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }

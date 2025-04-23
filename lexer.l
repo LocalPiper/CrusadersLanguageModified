@@ -34,6 +34,7 @@
 "bestow"     { return ASSIGN; }
 "inscribe"   { return FUNCTION; }
 "also"     { return COMMA; }
+"yield"   { return RETURN; }
 \n             { return EOL; }
 [ \t]          {}
 

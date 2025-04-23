@@ -34,7 +34,7 @@ ASTNode* root = nullptr;
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE FUNCTION COMMA RETURN
+%token IF ELSE OB CB WHILE FUNCTION COMMA RETURN QUESTION
 %type <stmt> program
 %type <stmt> if_statement while_statement statement expression_statement print_statement function_declaration return_statement
 %type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
@@ -119,7 +119,8 @@ while_statement:
                WHILE OP expression CP block { $$ = new WhileNode($3, $5); }
 
 expression:
-          assignment { $$ = $1; }
+          assignment QUESTION expression ELSE expression { $$ = new TernaryIfNode($1, $3, $5); }
+          | assignment { $$ = $1; }
           ;
 
 assignment:

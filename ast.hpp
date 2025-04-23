@@ -116,6 +116,16 @@ public:
   void evaluate() const override;
 };
 
+class TernaryIfNode : public ExpressionNode {
+public:
+  ExpressionNode *condition;
+  ExpressionNode *thenExpr;
+  ExpressionNode *elseExpr;
+  TernaryIfNode(ExpressionNode *cond, ExpressionNode *then, ExpressionNode *els)
+      : condition(cond), thenExpr(then), elseExpr(els) {}
+  Value evaluate() const override;
+};
+
 class BlockNode : public StatementNode {
 public:
   vector<StatementNode *> statements;

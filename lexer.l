@@ -35,6 +35,7 @@
 "inscribe"   { return FUNCTION; }
 "also"     { return COMMA; }
 "yield"   { return RETURN; }
+"perchance" { return QUESTION; }
 \n             { return EOL; }
 [ \t]          {}
 

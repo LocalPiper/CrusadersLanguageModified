@@ -213,6 +213,13 @@ void IfNode::evaluate() const {
   }
 }
 
+Value TernaryIfNode::evaluate() const {
+  if (isTruthy(condition->evaluate())) {
+    return thenExpr->evaluate();
+  }
+  return elseExpr->evaluate();
+}
+
 void BlockNode::evaluate() const {
   enterScope();
   try {

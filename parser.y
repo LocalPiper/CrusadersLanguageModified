@@ -23,6 +23,9 @@ ASTNode* root = nullptr;
   double dnum;
   char* str;
   ASTNode *node;
+  ExpressionNode* expr;
+  StatementNode* stmt;
+  BlockNode* blk;
 }
 
 %token <num> NUMBER
@@ -31,12 +34,15 @@ ASTNode* root = nullptr;
 %token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
 %token IF ELSE OB CB WHILE
-%type <node> program statements statement expression_statement print_statement
-%type <node> expression assignment logical_or logical_and equalty comparison term factor unary primary
-%type <node> if_statement block while_statement
+%type <stmt> program  
+%type <stmt> if_statement while_statement statement expression_statement print_statement 
+%type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary 
+%type <blk> block statements
 
 %nonassoc IF
 %nonassoc ELSE
+
+%start program
 %%
 
 program:
@@ -45,13 +51,14 @@ program:
 
 statements:
           statement statements { 
-            $$ = new BlockNode(); 
-            dynamic_cast<BlockNode*>($$)->addStatement($1); 
-            dynamic_cast<BlockNode*>($$)->addStatement($2); 
+            $$ = new BlockNode();
+            $$->addStatement($1);
+            for (auto s : $2->statements) $$->addStatement(s);
+            delete $2;
           }
           | statement { 
             $$ = new BlockNode(); 
-            dynamic_cast<BlockNode*>($$)->addStatement($1); 
+            $$->addStatement($1); 
           }
           ;
 
@@ -72,7 +79,7 @@ print_statement:
                ;
 
 expression_statement:
-                    expression { $$ = $1; }
+                    expression { $$ = new ExpressionStatementNode($1); }
                     ;
 
 
@@ -151,7 +158,7 @@ primary:
 
 int main() {
     if (yyparse() == 0 && root) {
-      root->evaluate();
+      dynamic_cast<StatementNode*>(root)->evaluate();
     }
     return 0;
 }

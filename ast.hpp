@@ -11,105 +11,125 @@ using Value = std::variant<int, double, string>;
 class ASTNode {
 public:
   virtual ~ASTNode() = default;
+};
+
+class ExpressionNode : public ASTNode {
+public:
   virtual Value evaluate() const = 0;
 };
 
-class DoubleNode : public ASTNode {
+class StatementNode : public ASTNode {
+public:
+  virtual void evaluate() const = 0;
+};
+
+class ExpressionStatementNode : public StatementNode {
+public:
+  ExpressionNode *expr;
+  ExpressionStatementNode(ExpressionNode *e) : expr(e) {}
+  void evaluate() const override { expr->evaluate(); }
+};
+
+class DoubleNode : public ExpressionNode {
 public:
   double value;
   DoubleNode(double val) : value(val) {}
   Value evaluate() const override { return value; }
 };
 
-class NumberNode : public ASTNode {
+class NumberNode : public ExpressionNode {
 public:
   int value;
   NumberNode(int val) : value(val) {}
   Value evaluate() const override { return value; }
 };
 
-class StringNode : public ASTNode {
+class StringNode : public ExpressionNode {
 public:
   string value;
   StringNode(string val) : value(val) {}
   Value evaluate() const override { return value; }
 };
 
-class VariableNode : public ASTNode {
+class VariableNode : public ExpressionNode {
 public:
   string name;
   VariableNode(const string &n) : name(n) {}
   Value evaluate() const override;
 };
 
-class BinaryOpNode : public ASTNode {
+class BinaryOpNode : public ExpressionNode {
 public:
   string op;
-  ASTNode *left;
-  ASTNode *right;
+  ExpressionNode *left;
+  ExpressionNode *right;
 
-  BinaryOpNode(const string &o, ASTNode *l, ASTNode *r)
+  BinaryOpNode(const string &o, ExpressionNode *l, ExpressionNode *r)
       : op(o), left(l), right(r) {}
 
   Value evaluate() const override;
 };
 
-class UnaryOpNode : public ASTNode {
+class UnaryOpNode : public ExpressionNode {
 public:
   string op;
-  ASTNode *right;
+  ExpressionNode *right;
 
-  UnaryOpNode(const string &o, ASTNode *r) : op(o), right(r) {}
+  UnaryOpNode(const string &o, ExpressionNode *r) : op(o), right(r) {}
 
   Value evaluate() const override;
 };
 
-class PrintNode : public ASTNode {
+class PrintNode : public StatementNode {
 public:
-  ASTNode *expression;
-  PrintNode(ASTNode *expr) : expression(expr) {}
-  Value evaluate() const override;
+  ExpressionNode *expression;
+  PrintNode(ExpressionNode *expr) : expression(expr) {}
+  void evaluate() const override;
 };
 
-class AssignmentNode : public ASTNode {
-public:
-  string name;
-  ASTNode *expression;
-  AssignmentNode(const string &n, ASTNode *expr) : name(n), expression(expr) {}
-  Value evaluate() const override;
-};
-
-class CreationNode : public ASTNode {
+class AssignmentNode : public ExpressionNode {
 public:
   string name;
-  ASTNode *expression;
-  CreationNode(const string &n, ASTNode *expr) : name(n), expression(expr) {}
+  ExpressionNode *expression;
+  AssignmentNode(const string &n, ExpressionNode *expr)
+      : name(n), expression(expr) {}
   Value evaluate() const override;
 };
 
-class IfNode : public ASTNode {
+class CreationNode : public ExpressionNode {
 public:
-  ASTNode *condition;
-  ASTNode *thenBlock;
-  ASTNode *elseBlock;
-  IfNode(ASTNode *cond, ASTNode *thenB, ASTNode *elseB = nullptr)
+  string name;
+  ExpressionNode *expression;
+  CreationNode(const string &n, ExpressionNode *expr)
+      : name(n), expression(expr) {}
+  Value evaluate() const override;
+};
+
+class IfNode : public StatementNode {
+public:
+  ExpressionNode *condition;
+  StatementNode *thenBlock;
+  StatementNode *elseBlock;
+  IfNode(ExpressionNode *cond, StatementNode *thenB,
+         StatementNode *elseB = nullptr)
       : condition(cond), thenBlock(thenB), elseBlock(elseB) {}
-  Value evaluate() const override;
+  void evaluate() const override;
 };
 
-class BlockNode : public ASTNode {
+class BlockNode : public StatementNode {
 public:
-  vector<ASTNode *> statements;
-  void addStatement(ASTNode *stmt) { statements.push_back(stmt); }
-  Value evaluate() const override;
+  vector<StatementNode *> statements;
+  void addStatement(StatementNode *stmt) { statements.push_back(stmt); }
+  void evaluate() const override;
 };
 
-class WhileNode : public ASTNode {
+class WhileNode : public StatementNode {
 public:
-  ASTNode *condition;
-  ASTNode *block;
-  WhileNode(ASTNode *cond, ASTNode *blk) : condition(cond), block(blk) {}
-  Value evaluate() const override;
+  ExpressionNode *condition;
+  StatementNode *block;
+  WhileNode(ExpressionNode *cond, StatementNode *blk)
+      : condition(cond), block(blk) {}
+  void evaluate() const override;
 };
 
 #endif // AST_HPP

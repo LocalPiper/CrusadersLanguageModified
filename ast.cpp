@@ -210,7 +210,7 @@ Value UnaryOpNode::evaluate() const {
   return 0;
 }
 
-Value PrintNode::evaluate() const {
+void PrintNode::evaluate() const {
   Value result = expression->evaluate();
   if (holds_alternative<int>(result)) {
     cout << "Milord proclaimeth: " << get<int>(result) << "!\n";
@@ -219,7 +219,6 @@ Value PrintNode::evaluate() const {
   } else if (holds_alternative<string>(result)) {
     cout << "Milord proclaimeth: \"" << get<string>(result) << "\"!\n";
   }
-  return result;
 }
 
 Value AssignmentNode::evaluate() const {
@@ -234,28 +233,27 @@ Value CreationNode::evaluate() const {
   return result;
 }
 
-Value IfNode::evaluate() const {
+void IfNode::evaluate() const {
   if (isTruthy(condition->evaluate())) {
-    return thenBlock->evaluate();
+    thenBlock->evaluate();
+    return;
   } else if (elseBlock) {
-    return elseBlock->evaluate();
+    elseBlock->evaluate();
+    return;
   }
-  return 0;
 }
 
-Value BlockNode::evaluate() const {
+void BlockNode::evaluate() const {
   enterScope();
   Value result = 0;
   for (auto &statement : statements) {
-    result = statement->evaluate();
+    statement->evaluate();
   }
   exitScope();
-  return result;
 }
 
-Value WhileNode::evaluate() const {
+void WhileNode::evaluate() const {
   while (isTruthy(condition->evaluate())) {
     block->evaluate();
   }
-  return 0;
 }

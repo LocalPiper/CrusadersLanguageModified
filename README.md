@@ -97,8 +97,8 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | ✅ DONE         |
 | 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ✅ DONE         |
-| 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
-| 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
+| 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
+| 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
 | 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ❌ NOT IMPLEMENTED         |

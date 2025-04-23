@@ -54,21 +54,23 @@ program:
        ;
 
 statements:
-          statement statements { 
+          statement EOL statements { 
             $$ = new BlockNode();
             $$->addStatement($1);
-            for (auto s : $2->statements) $$->addStatement(s);
-            delete $2;
+            for (auto s : $3->statements) $$->addStatement(s);
+            delete $3;
           }
-          | statement { 
+          | statement EOL { 
             $$ = new BlockNode(); 
             $$->addStatement($1); 
           }
+          | EOL statements { $$ = $2; }
+          | EOL { $$ = new BlockNode(); }
           ;
 
 statement:
-         print_statement EOL { $$ = $1; }
-         | expression_statement EOL { $$ = $1; }
+         print_statement { $$ = $1; }
+         | expression_statement { $$ = $1; }
          | if_statement { $$ = $1; }
          | while_statement { $$ = $1; }
          | block { $$ = $1; }
@@ -84,7 +86,7 @@ function_declaration:
                     ;
 
 return_statement:
-                RETURN expression EOL { $$ = new ReturnNode($2); }
+                RETURN expression { $$ = new ReturnNode($2); }
                 ;
 
 parameters:

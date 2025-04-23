@@ -1,9 +1,10 @@
 #include "ast.hpp"
+#include "environment.hpp"
+#include "function.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -35,37 +36,6 @@ TypeRank getTypeRank(const Value &val) {
 // so as we can see, RESULT = MAX(TYPE A, TYPE B)
 TypeRank promote(const Value &a, const Value &b) {
   return max(getTypeRank(a), getTypeRank(b));
-}
-
-vector<unordered_map<string, Value>> scopes = {{}};
-
-void enterScope() { scopes.push_back({}); }
-
-void exitScope() {
-  if (scopes.size() > 1) {
-    scopes.pop_back();
-  }
-}
-
-Value getVar(const string &name) {
-  for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
-    if (it->count(name))
-      return (*it)[name];
-  }
-  cerr << "Error: Undefined variable " << name << endl;
-  return 0;
-}
-
-void createVar(const string &name, Value value) { scopes.back()[name] = value; }
-
-void setVar(const string &name, Value value) {
-  for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
-    if (it->count(name)) {
-      (*it)[name] = value;
-      return;
-    }
-  }
-  cerr << "Error: Undefined variable " << name << endl;
 }
 
 bool isTruthy(const Value &val) {
@@ -256,4 +226,20 @@ void WhileNode::evaluate() const {
   while (isTruthy(condition->evaluate())) {
     block->evaluate();
   }
+}
+
+void FunctionDeclarationNode::evaluate() const {
+  functionTable[name] = CrusaderFunction(name, parameters, body);
+}
+
+Value FunctionCallNode::evaluate() const {
+  if (!functionTable.count(name)) {
+    cerr << "Error: Unknown function '" << name << "'\n";
+    return 0;
+  }
+
+  vector<Value> argValues;
+  for (auto *arg : arguments)
+    argValues.push_back(arg->evaluate());
+  return functionTable[name].call(argValues);
 }

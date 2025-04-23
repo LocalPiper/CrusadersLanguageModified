@@ -132,4 +132,24 @@ public:
   void evaluate() const override;
 };
 
+class FunctionDeclarationNode : public StatementNode {
+public:
+  string name;
+  vector<string> parameters;
+  BlockNode *body;
+  FunctionDeclarationNode(const string &n, const vector<string> &params,
+                          BlockNode *b)
+      : name(n), parameters(params), body(b) {}
+  void evaluate() const override;
+};
+
+class FunctionCallNode : public ExpressionNode {
+public:
+  string name;
+  vector<ExpressionNode *> arguments;
+  FunctionCallNode(const string &n, const vector<ExpressionNode *> &args)
+      : name(n), arguments(args) {}
+  Value evaluate() const override;
+};
+
 #endif // AST_HPP

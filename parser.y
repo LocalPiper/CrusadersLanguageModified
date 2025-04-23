@@ -22,10 +22,11 @@ ASTNode* root = nullptr;
   int num;
   double dnum;
   char* str;
-  ASTNode *node;
   ExpressionNode* expr;
   StatementNode* stmt;
   BlockNode* blk;
+  vector<string>* strList;
+  vector<ExpressionNode*>* exprList;
 }
 
 %token <num> NUMBER
@@ -33,11 +34,13 @@ ASTNode* root = nullptr;
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE
-%type <stmt> program  
-%type <stmt> if_statement while_statement statement expression_statement print_statement 
-%type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary 
+%token IF ELSE OB CB WHILE FUNCTION COMMA
+%type <stmt> program
+%type <stmt> if_statement while_statement statement expression_statement print_statement function_declaration 
+%type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
 %type <blk> block statements
+%type <strList> parameters
+%type <exprList> arguments
 
 %nonassoc IF
 %nonassoc ELSE
@@ -68,7 +71,24 @@ statement:
          | if_statement { $$ = $1; }
          | while_statement { $$ = $1; }
          | block { $$ = $1; }
+         | function_declaration { $$ = $1; }
          ;
+
+function_declaration:
+                    FUNCTION IDENTIFIER OP parameters CP block {
+                    $$ = new FunctionDeclarationNode($2, *$4, $6);
+                    delete $4;
+                    }
+
+parameters:
+          IDENTIFIER { $$ = new vector<string>({ $1 }); }
+          | IDENTIFIER COMMA parameters {
+            $$ = new vector<string>(*($3));
+            $$->insert($$->begin(), $1);
+            delete $3;
+          }
+          | /* empty */ { $$ = new vector<string>(); }
+          ;
 
 block:
      OB EOL statements CB EOL { $$ = $3; }
@@ -151,7 +171,25 @@ primary:
        | IDENTIFIER { $$ = new VariableNode($1); }
        | STRING { $$ = new StringNode($1); }
        | OP expression CP { $$ = $2; }
+       | function_call { $$ = $1; };
        ;
+
+function_call:
+             IDENTIFIER OP arguments CP {
+             $$ = new FunctionCallNode($1, *$3);
+             delete $3;
+             }
+             ;
+
+arguments:
+         expression { $$ = new vector<ExpressionNode*>({ $1 });}
+         | expression COMMA arguments {
+          $$ = new vector<ExpressionNode*>(*($3));
+          $$->insert($$->begin(), $1);
+          delete $3;
+         }
+         | /* empty */ { $$ = new vector<ExpressionNode*>(); }
+         ;
 
 %%
 

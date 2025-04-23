@@ -32,6 +32,8 @@
 "nay"      { return FALSE; }
 "proclaim"      { return PRINT; }
 "bestow"     { return ASSIGN; }
+"inscribe"   { return FUNCTION; }
+"also"     { return COMMA; }
 \n             { return EOL; }
 [ \t]          {}
 

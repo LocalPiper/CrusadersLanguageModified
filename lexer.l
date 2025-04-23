@@ -11,6 +11,7 @@
 "sacrifice"      { return MINUS; }
 "conjure"        { return STAR; }
 "split"       { return SLASH; }
+"remnant"     { return MOD; }
 "claimeth"     { return EQ; }
 "unworthy"       { return LT; }
 "mightier"      { return GT; }

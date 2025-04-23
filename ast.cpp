@@ -53,6 +53,9 @@ Value VariableNode::evaluate() const { return getVar(name); }
 bool isValidOperation(const string &op, TypeRank type) {
   switch (type) {
   case TypeRank::INT:
+    return op == "+" || op == "-" || op == "*" || op == "/" || op == "%" ||
+           op == "==" || op == "!=" || op == "<" || op == ">" || op == "<=" ||
+           op == ">=";
   case TypeRank::DOUBLE:
     return op == "+" || op == "-" || op == "*" || op == "/" || op == "==" ||
            op == "!=" || op == "<" || op == ">" || op == "<=" || op == ">=";
@@ -80,6 +83,8 @@ Value applyBinaryOp(const string &op, const Value &lval, const Value &rval) {
       return l * r;
     if (op == "/")
       return r != 0 ? l / r : 0;
+    if (op == "%")
+      return l % r;
     if (op == "==")
       return l == r;
     if (op == "!=")

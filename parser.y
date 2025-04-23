@@ -32,7 +32,7 @@ ASTNode* root = nullptr;
 %token <num> NUMBER
 %token <dnum> DOUBLE
 %token <str> IDENTIFIER STRING
-%token PLUS MINUS STAR SLASH OP CP EOL PRINT ASSIGN VAR
+%token PLUS MINUS STAR SLASH MOD OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
 %token IF ELSE OB CB WHILE FUNCTION COMMA RETURN QUESTION
 %type <stmt> program
@@ -164,6 +164,7 @@ term:
 factor:
       factor STAR unary { $$ = new BinaryOpNode("*", $1, $3); }
       | factor SLASH unary { $$ = new BinaryOpNode("/", $1, $3); }
+      | factor MOD unary { $$ = new BinaryOpNode("%", $1, $3); }
       | unary { $$ = $1; }
       ;
 

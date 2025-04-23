@@ -69,13 +69,13 @@ statements:
           ;
 
 statement:
-         print_statement { $$ = $1; }
-         | expression_statement { $$ = $1; }
-         | if_statement { $$ = $1; }
-         | while_statement { $$ = $1; }
+         print_statement
+         | expression_statement
+         | if_statement
+         | while_statement
          | block { $$ = $1; }
-         | function_declaration { $$ = $1; }
-         | return_statement { $$ = $1; }
+         | function_declaration
+         | return_statement
          ;
 
 function_declaration:
@@ -100,7 +100,7 @@ parameters:
           ;
 
 block:
-     OB EOL statements CB EOL { $$ = $3; }
+     OB statements CB { $$ = $2; }
      ;
 
 print_statement:

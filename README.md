@@ -56,7 +56,7 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `GEQ`         | `nobelow`              | Greater than or equal (`>=`)        |
 | `NEQ`         | `reject`               | Not equal (`!=`)                    |
 | `AND`         | `united`               | Logical AND (`&&`)                  |
-| `OR`          | `either`               | Logical OR (`\|\|`)                   |
+| `OR`          | `either`               | Logical OR (`\|\|`)                 |
 | `NOT`         | `deny`                 | Logical NOT (`!`)                   |
 | `OP`          | `invoke`               | Open parenthesis (`(`)              |
 | `CP`          | `dismiss`              | Close parenthesis (`)`)             |
@@ -70,14 +70,101 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `FALSE`       | `nay`                  | Boolean `false`                     |
 | `PRINT`       | `proclaim`             | Print statement                     |
 | `ASSIGN`      | `bestow`               | Assignment (`=`)                    |
+| `FUNCTION`    | `inscribe`             | Function definition                 |
+| `COMMA`       | `also`                 | Comma (`,`) separator for function calls and definitions                |
+| `RETURN`      | `yield`                | Return statement                    |
 | `EOL`         | *(newline)*            | End of line                         |
 | `NUMBER`      | *(digits)*             | Integer literals                    |
+| `DOUBLE`      | *(digits, separated by one `.`)* | Floating point values     |
 | `IDENTIFIER`  | *(identifiers)*        | Variable/function names             |
 | `STRING`      | *(quoted text)*        | String literals                     |
 
 ## 🏗️ Parsing Rules
 
-TODO
+Parsing productions are as follows, presented in BNF:
+```bnf
+program ::= statements
+
+statements ::= statement statements
+             | statement
+
+statement ::= print_statement EOL
+            | expression_statement EOL
+            | if_statement
+            | while_statement
+            | block
+            | function_declaration
+            | return_statement
+
+function_declaration ::= FUNCTION IDENTIFIER OP parameters CP block
+
+return_statement ::= RETURN expression EOL
+
+parameters ::= IDENTIFIER
+             | IDENTIFIER COMMA parameters
+             | ε
+
+block ::= OB EOL statements CB EOL
+
+print_statement ::= PRINT expression
+
+expression_statement ::= expression
+
+if_statement ::= IF OP expression CP block ELSE block
+               | IF OP expression CP block
+
+while_statement ::= WHILE OP expression CP block
+
+expression ::= assignment
+
+assignment ::= IDENTIFIER ASSIGN assignment
+             | VAR IDENTIFIER ASSIGN assignment
+             | logical_or
+
+logical_or ::= logical_or OR logical_and
+             | logical_and
+
+logical_and ::= logical_and AND equalty
+              | equalty
+
+equalty ::= comparison EQ comparison
+          | comparison NEQ comparison
+          | comparison
+
+comparison ::= term LT term
+             | term GT term
+             | term GEQ term
+             | term LEQ term
+             | term
+
+term ::= term PLUS factor
+       | term MINUS factor
+       | factor
+
+factor ::= factor STAR unary
+         | factor SLASH unary
+         | unary
+
+unary ::= MINUS unary
+        | NOT unary
+        | primary
+
+primary ::= FALSE
+          | TRUE
+          | NUMBER
+          | DOUBLE
+          | IDENTIFIER
+          | STRING
+          | OP expression CP
+          | function_call
+
+function_call ::= IDENTIFIER OP arguments CP
+
+arguments ::= expression
+            | expression COMMA arguments
+            | ε
+
+```
 
 ## 🗺️ Development Stages
 

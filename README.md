@@ -49,6 +49,7 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `MINUS`       | `sacrifice`            | Subtraction (`-`)                    |
 | `STAR`        | `conjure`              | Multiplication (`*`)                |
 | `SLASH`       | `split`                | Division (`/`)                      |
+| `MOD`         | `remnant`              | Modulo (`%`)                        |
 | `EQ`          | `claimeth`             | Equality (`==`)                     |
 | `LT`          | `unworthy`             | Less than (`<`)                     |
 | `GT`          | `mightier`             | Greater than (`>`)                  |
@@ -63,7 +64,8 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `OB`          | `commence`             | Open block (`{`)                    |
 | `CB`          | `conclude`             | Close block (`}`)                   |
 | `IF`          | `suppose`              | If statement                        |
-| `ELSE`        | `elsewise`             | Else statement                      |
+| `ELSE`        | `elsewise`             | Else statement (also used in ternary if)               |
+| `QUESTION`    | `perchance`            | Ternary if expression (`?`)         |
 | `WHILE`       | `aslongas`             | While loop                          |
 | `VAR`         | `henceforth`           | Variable declaration                |
 | `TRUE`        | `aye`                  | Boolean `true`                      |
@@ -82,14 +84,17 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 ## 🏗️ Parsing Rules
 
 Parsing productions are as follows, presented in BNF:
+
 ```bnf
 program ::= statements
 
-statements ::= statement statements
-             | statement
+statements ::= statement EOL statements
+             | statement EOL
+             | EOL statements
+             | EOL
 
-statement ::= print_statement EOL
-            | expression_statement EOL
+statement ::= print_statement
+            | expression_statement
             | if_statement
             | while_statement
             | block
@@ -98,13 +103,13 @@ statement ::= print_statement EOL
 
 function_declaration ::= FUNCTION IDENTIFIER OP parameters CP block
 
-return_statement ::= RETURN expression EOL
+return_statement ::= RETURN expression
 
 parameters ::= IDENTIFIER
              | IDENTIFIER COMMA parameters
              | ε
 
-block ::= OB EOL statements CB EOL
+block ::= OB statements CB
 
 print_statement ::= PRINT expression
 
@@ -115,7 +120,8 @@ if_statement ::= IF OP expression CP block ELSE block
 
 while_statement ::= WHILE OP expression CP block
 
-expression ::= assignment
+expression ::= assignment QUESTION expression ELSE expression
+             | assignment
 
 assignment ::= IDENTIFIER ASSIGN assignment
              | VAR IDENTIFIER ASSIGN assignment
@@ -143,6 +149,7 @@ term ::= term PLUS factor
 
 factor ::= factor STAR unary
          | factor SLASH unary
+         | factor MOD unary
          | unary
 
 unary ::= MINUS unary
@@ -188,7 +195,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ✅ DONE         |
 | 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
-| 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ❌ NOT IMPLEMENTED         |

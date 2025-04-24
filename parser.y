@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include "ast.hpp"
+#include "builtin.hpp"
 using namespace std;
 
 int yylex();
@@ -221,6 +222,7 @@ arguments:
 
 int main() {
     if (yyparse() == 0 && root) {
+      initialize_builtins();
       dynamic_cast<StatementNode*>(root)->evaluate();
     }
     return 0;

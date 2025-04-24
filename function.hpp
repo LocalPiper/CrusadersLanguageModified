@@ -31,7 +31,7 @@ public:
                   function<Value(const vector<Value> &)> func)
       : functionName(name), func(std::move(func)) {}
 
-  Value call(const vector<Value> &args) { return func(args); }
+  Value call(const vector<Value> &args) const { return func(args); }
 };
 
 class ReturnException : public exception {

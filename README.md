@@ -67,6 +67,7 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `ELSE`        | `elsewise`             | Else statement (also used in ternary if)               |
 | `QUESTION`    | `perchance`            | Ternary if expression (`?`)         |
 | `WHILE`       | `aslongas`             | While loop                          |
+| `FOR`         | `upon`                 | For loop                            |
 | `VAR`         | `henceforth`           | Variable declaration                |
 | `TRUE`        | `aye`                  | Boolean `true`                      |
 | `FALSE`       | `nay`                  | Boolean `false`                     |
@@ -119,6 +120,8 @@ if_statement ::= IF OP expression CP block ELSE block
                | IF OP expression CP block
 
 while_statement ::= WHILE OP expression CP block
+
+for_statement ::= FOR OP expression COMMA expression COMMA expression CP block
 
 expression ::= assignment QUESTION expression ELSE expression
              | assignment
@@ -196,7 +199,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
 | 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
-| 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ❌ NOT IMPLEMENTED         |

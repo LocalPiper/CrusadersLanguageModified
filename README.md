@@ -98,6 +98,7 @@ statement ::= print_statement
             | expression_statement
             | if_statement
             | while_statement
+            | for_statement
             | block
             | function_declaration
             | return_statement
@@ -168,7 +169,8 @@ primary ::= FALSE
           | OP expression CP
           | function_call
 
-function_call ::= IDENTIFIER OP arguments CP
+function_call ::= function_call OP arguments CP
+                | IDENTIFIER OP arguments CP
 
 arguments ::= expression
             | expression COMMA arguments

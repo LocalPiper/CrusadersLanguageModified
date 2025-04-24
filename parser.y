@@ -34,9 +34,9 @@ ASTNode* root = nullptr;
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH MOD OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE FUNCTION COMMA RETURN QUESTION
+%token IF ELSE OB CB WHILE FOR FUNCTION COMMA RETURN QUESTION
 %type <stmt> program
-%type <stmt> if_statement while_statement statement expression_statement print_statement function_declaration return_statement
+%type <stmt> if_statement while_statement for_statement statement expression_statement print_statement function_declaration return_statement
 %type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
 %type <blk> block statements
 %type <strList> parameters
@@ -73,6 +73,7 @@ statement:
          | expression_statement
          | if_statement
          | while_statement
+         | for_statement
          | block { $$ = $1; }
          | function_declaration
          | return_statement
@@ -119,6 +120,19 @@ if_statement:
 
 while_statement:
                WHILE OP expression CP block { $$ = new WhileNode($3, $5); }
+               ;
+
+for_statement:
+             FOR OP expression COMMA expression COMMA expression CP block {
+                BlockNode* body = new BlockNode();
+                for (auto s : $9->statements) body->addStatement(s);
+                body->addStatement(new ExpressionStatementNode($7));
+                BlockNode* loop = new BlockNode();
+                loop->addStatement(new ExpressionStatementNode($3));
+                loop->addStatement(new WhileNode($5, body));
+                $$ = loop;
+             }
+             ;
 
 expression:
           assignment QUESTION expression ELSE expression { $$ = new TernaryIfNode($1, $3, $5); }

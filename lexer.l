@@ -28,6 +28,7 @@
 "suppose"      { return IF; }
 "elsewise"     { return ELSE; }
 "aslongas"       { return WHILE; }
+"upon"         { return FOR; }
 "henceforth"   { return VAR; }
 "aye"        { return TRUE; }
 "nay"      { return FALSE; }

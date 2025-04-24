@@ -3,6 +3,7 @@
 #include "function.hpp"
 #include <algorithm>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -245,7 +246,7 @@ void WhileNode::evaluate() const {
 }
 
 void FunctionDeclarationNode::evaluate() const {
-  functionTable[name] = CrusaderFunction(name, parameters, body);
+  functionTable[name] = make_shared<CrusaderFunction>(name, parameters, body);
 }
 
 Value FunctionCallNode::evaluate() const {
@@ -257,7 +258,7 @@ Value FunctionCallNode::evaluate() const {
   vector<Value> argValues;
   for (auto *arg : arguments)
     argValues.push_back(arg->evaluate());
-  return functionTable[name].call(argValues);
+  return functionTable[name]->call(argValues);
 }
 
 void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }

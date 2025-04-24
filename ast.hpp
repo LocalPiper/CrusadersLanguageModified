@@ -1,12 +1,11 @@
 #ifndef AST_HPP
 #define AST_HPP
 
+#include "value.hpp"
 #include <string>
-#include <variant>
 #include <vector>
 
 using namespace std;
-using Value = std::variant<int, double, string>;
 
 class ASTNode {
 public:

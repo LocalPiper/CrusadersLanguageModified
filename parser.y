@@ -4,6 +4,7 @@
 #include <vector>
 #include "ast.hpp"
 #include "builtin.hpp"
+#include "environment.hpp"
 using namespace std;
 
 int yylex();
@@ -222,8 +223,10 @@ arguments:
 
 int main() {
     if (yyparse() == 0 && root) {
+      enterScope();
       initialize_builtins();
       dynamic_cast<StatementNode*>(root)->evaluate();
+      exitScope();
     }
     return 0;
 }

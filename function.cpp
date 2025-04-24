@@ -1,17 +1,13 @@
 #include "function.hpp"
 #include "environment.hpp"
 #include <iostream>
-#include <memory>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
-unordered_map<string, shared_ptr<CrusaderCallable>> functionTable;
-
-Value CrusaderFunction::call(const vector<Value> &args) const {
+Value CrusaderFunction::call(const vector<Value> &args) {
   if (args.size() != params.size()) {
-    cerr << "Error: Function '" << functionName << "' expected "
-         << params.size() << " arguments, got " << args.size() << ".\n";
+    cerr << "Error: Function expected " << params.size() << " arguments, got "
+         << args.size() << ".\n";
     return 0;
   }
 

@@ -1,6 +1,7 @@
 #ifndef ENVIRONMENT_HPP
 #define ENVIRONMENT_HPP
-#include "ast.hpp"
+
+#include "value.hpp"
 #include <string>
 #include <unordered_map>
 #include <vector>

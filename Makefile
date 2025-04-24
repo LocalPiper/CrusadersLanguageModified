@@ -3,7 +3,7 @@ LEX = flex
 BISON = bison
 CFLAGS = -std=c++17
 
-all: lexer.tab.cpp parser.tab.cpp ast.cpp function.cpp environment.cpp builtin.cpp callable.hpp
+all: lexer.tab.cpp parser.tab.cpp ast.cpp function.cpp environment.cpp builtin.cpp callable.hpp array.hpp value.hpp
 	$(CC) $(CFLAGS) lexer.tab.cpp parser.tab.cpp ast.cpp function.cpp environment.cpp builtin.cpp -o clm
 
 lexer.tab.cpp: lexer.l

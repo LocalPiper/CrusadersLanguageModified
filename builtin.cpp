@@ -1,6 +1,8 @@
 #include "builtin.hpp"
-#include "ast.hpp"
+#include "array.hpp"
+#include "environment.hpp"
 #include "function.hpp"
+#include "value.hpp"
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -15,13 +17,12 @@ Value builtin_array(const vector<Value> &args) {
                         to_string((int)args.size()) + " were given.");
   }
 
-  int N = get<int>(args[0]);
-  Value arr[N];
-  for (int i = 1; i <= N; ++i)
-    arr[i - 1] = args[i];
-  return "created array of size " + to_string(N);
+  vector<Value> arr;
+  for (int i = 0; i <= args.size(); ++i)
+    arr.push_back(args[i]);
+  return make_shared<CrusaderArray>(arr);
 }
 
 void initialize_builtins() {
-  functionTable["array"] = make_shared<BuiltinFunction>("array", builtin_array);
+  createVar("array", make_shared<BuiltinFunction>(builtin_array));
 }

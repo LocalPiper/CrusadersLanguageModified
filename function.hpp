@@ -5,33 +5,27 @@
 #include "callable.hpp"
 #include <exception>
 #include <functional>
-#include <memory>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 using namespace std;
 
 class CrusaderFunction : public CrusaderCallable {
-  string functionName;
   vector<string> params;
   BlockNode *body;
 
 public:
-  CrusaderFunction() : functionName(""), params(), body(nullptr) {}
-  CrusaderFunction(string name, vector<string> params, BlockNode *body)
-      : functionName(name), params(params), body(body) {}
-  Value call(const vector<Value> &args) const;
+  CrusaderFunction(vector<string> params, BlockNode *body)
+      : params(params), body(body) {}
+  Value call(const vector<Value> &args);
 };
 
 class BuiltinFunction : public CrusaderCallable {
 public:
-  string functionName;
   function<Value(const vector<Value> &)> func;
-  BuiltinFunction(const string &name,
-                  function<Value(const vector<Value> &)> func)
-      : functionName(name), func(std::move(func)) {}
+  BuiltinFunction(function<Value(const vector<Value> &)> func)
+      : func(std::move(func)) {}
 
-  Value call(const vector<Value> &args) const { return func(args); }
+  Value call(const vector<Value> &args) { return func(args); }
 };
 
 class ReturnException : public exception {
@@ -41,5 +35,4 @@ public:
   const char *what() const noexcept override { return "Function returned"; }
 };
 
-extern unordered_map<string, shared_ptr<CrusaderCallable>> functionTable;
 #endif // FUNCTION_HPP

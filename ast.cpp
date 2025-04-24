@@ -1,4 +1,5 @@
 #include "ast.hpp"
+#include "callable.hpp"
 #include "environment.hpp"
 #include "function.hpp"
 #include <algorithm>
@@ -11,7 +12,6 @@
 
 using namespace std;
 
-using Value = variant<int, double, string>;
 enum class TypeRank { INT = 1, DOUBLE = 2, STRING = 3 };
 
 TypeRank getTypeRank(const Value &val) {
@@ -246,19 +246,14 @@ void WhileNode::evaluate() const {
 }
 
 void FunctionDeclarationNode::evaluate() const {
-  functionTable[name] = make_shared<CrusaderFunction>(name, parameters, body);
+  createVar(name, make_shared<CrusaderFunction>(parameters, body));
 }
 
 Value FunctionCallNode::evaluate() const {
-  if (!functionTable.count(name)) {
-    cerr << "Error: Unknown function '" << name << "'\n";
-    return 0;
-  }
-
   vector<Value> argValues;
   for (auto *arg : arguments)
     argValues.push_back(arg->evaluate());
-  return functionTable[name]->call(argValues);
+  return get<shared_ptr<CrusaderCallable>>(getVar(name))->call(argValues);
 }
 
 void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }

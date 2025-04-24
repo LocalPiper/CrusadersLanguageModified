@@ -155,9 +155,12 @@ public:
 class FunctionCallNode : public ExpressionNode {
 public:
   string name;
+  ExpressionNode *callee = nullptr;
   vector<ExpressionNode *> arguments;
   FunctionCallNode(const string &n, const vector<ExpressionNode *> &args)
       : name(n), arguments(args) {}
+  FunctionCallNode(ExpressionNode *callee, const vector<ExpressionNode *> &args)
+      : callee(callee), arguments(args) {}
   Value evaluate() const override;
 };
 

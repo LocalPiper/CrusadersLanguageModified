@@ -202,7 +202,11 @@ primary:
        ;
 
 function_call:
-             IDENTIFIER OP arguments CP {
+             function_call OP arguments CP {
+              $$ = new FunctionCallNode($1, *$3);
+              delete $3;
+             }
+             | IDENTIFIER OP arguments CP {
              $$ = new FunctionCallNode($1, *$3);
              delete $3;
              }

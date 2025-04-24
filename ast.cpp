@@ -253,6 +253,14 @@ Value FunctionCallNode::evaluate() const {
   vector<Value> argValues;
   for (auto *arg : arguments)
     argValues.push_back(arg->evaluate());
+  if (callee) {
+    Value calleeValue = callee->evaluate();
+    if (auto func = get_if<shared_ptr<CrusaderCallable>>(&calleeValue)) {
+      return (*func)->call(argValues);
+    } else {
+      throw runtime_error("Error: Tried to call a non-function value");
+    }
+  }
   return get<shared_ptr<CrusaderCallable>>(getVar(name))->call(argValues);
 }
 

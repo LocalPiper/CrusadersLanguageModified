@@ -136,8 +136,11 @@ class WhileNode : public StatementNode {
 public:
   ExpressionNode *condition;
   StatementNode *block;
+  ExpressionNode *step = nullptr; // a surprise tool that will help me later
   WhileNode(ExpressionNode *cond, StatementNode *blk)
       : condition(cond), block(blk) {}
+  WhileNode(ExpressionNode *cond, StatementNode *blk, ExpressionNode *step)
+      : condition(cond), block(blk), step(step) {}
   void evaluate() const override;
 };
 
@@ -168,6 +171,16 @@ class ReturnNode : public StatementNode {
 public:
   ExpressionNode *val;
   ReturnNode(ExpressionNode *val) : val(val) {}
+  void evaluate() const override;
+};
+
+class BreakNode : public StatementNode {
+public:
+  void evaluate() const override;
+};
+
+class ContinueNode : public StatementNode {
+public:
   void evaluate() const override;
 };
 

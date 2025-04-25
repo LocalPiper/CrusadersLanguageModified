@@ -35,4 +35,14 @@ public:
   const char *what() const noexcept override { return "Function returned"; }
 };
 
+class BreakException : public exception {
+public:
+  const char *what() const noexcept override { return "Breaking out of loop"; }
+};
+
+class ContinueException : public exception {
+public:
+  const char *what() const noexcept override { return "Continuing loop"; }
+};
+
 #endif // FUNCTION_HPP

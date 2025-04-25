@@ -29,6 +29,8 @@
 "elsewise"     { return ELSE; }
 "aslongas"       { return WHILE; }
 "upon"         { return FOR; }
+"flee"         { return BREAK; }
+"onward"       { return CONTINUE; }
 "henceforth"   { return VAR; }
 "aye"        { return TRUE; }
 "nay"      { return FALSE; }

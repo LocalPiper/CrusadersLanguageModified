@@ -233,16 +233,27 @@ void BlockNode::evaluate() const {
     for (auto &statement : statements) {
       statement->evaluate();
     }
-  } catch (ReturnException &ret) {
+  } catch (...) {
     exitScope();
-    throw ret;
+    throw;
   }
   exitScope();
 }
 
 void WhileNode::evaluate() const {
   while (isTruthy(condition->evaluate())) {
-    block->evaluate();
+    try {
+      block->evaluate();
+      if (step != nullptr)
+        step->evaluate();
+    } catch (BreakException &) {
+      break;
+    } catch (ContinueException &) {
+      if (step !=
+          nullptr) // if for loop, we evaluate step and only then continue
+        step->evaluate();
+      continue;
+    }
   }
 }
 
@@ -274,3 +285,7 @@ Value FunctionCallNode::evaluate() const {
 }
 
 void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }
+
+void BreakNode::evaluate() const { throw BreakException(); }
+
+void ContinueNode::evaluate() const { throw ContinueException(); }

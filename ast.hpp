@@ -170,6 +170,7 @@ public:
 class ReturnNode : public StatementNode {
 public:
   ExpressionNode *val;
+  ReturnNode() {}
   ReturnNode(ExpressionNode *val) : val(val) {}
   void evaluate() const override;
 };

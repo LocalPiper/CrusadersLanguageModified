@@ -284,7 +284,12 @@ Value FunctionCallNode::evaluate() const {
   throw runtime_error("Error: Tried to call a non-function value");
 }
 
-void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }
+void ReturnNode::evaluate() const {
+  if (val == nullptr) {
+    throw ReturnException(0);
+  }
+  throw ReturnException(val->evaluate());
+}
 
 void BreakNode::evaluate() const { throw BreakException(); }
 

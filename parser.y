@@ -92,6 +92,7 @@ function_declaration:
 
 return_statement:
                 RETURN expression { $$ = new ReturnNode($2); }
+                | RETURN { $$ = new ReturnNode(); }
                 ;
 
 parameters:

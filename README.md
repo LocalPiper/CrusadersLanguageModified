@@ -110,6 +110,7 @@ statement ::= print_statement
 function_declaration ::= FUNCTION IDENTIFIER OP parameters CP block
 
 return_statement ::= RETURN expression
+                   | RETURN
 
 parameters ::= IDENTIFIER
              | IDENTIFIER COMMA parameters

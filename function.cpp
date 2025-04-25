@@ -1,8 +1,13 @@
 #include "function.hpp"
 #include "environment.hpp"
 #include <iostream>
-#include <vector>
 using namespace std;
+
+std::shared_ptr<CrusaderCallable> CrusaderFunction::clone() const {
+  return std::make_shared<CrusaderFunction>(*this);
+}
+
+string CrusaderFunction::getType() const { return "function"; }
 
 Value CrusaderFunction::call(const vector<Value> &args) {
   if (args.size() != params.size()) {

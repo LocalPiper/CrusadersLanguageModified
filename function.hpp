@@ -6,7 +6,6 @@
 #include <exception>
 #include <functional>
 #include <utility>
-#include <vector>
 using namespace std;
 
 class CrusaderFunction : public CrusaderCallable {
@@ -17,6 +16,8 @@ public:
   CrusaderFunction(vector<string> params, BlockNode *body)
       : params(params), body(body) {}
   Value call(const vector<Value> &args);
+  std::shared_ptr<CrusaderCallable> clone() const;
+  string getType() const;
 };
 
 class BuiltinFunction : public CrusaderCallable {
@@ -25,7 +26,12 @@ public:
   BuiltinFunction(function<Value(const vector<Value> &)> func)
       : func(std::move(func)) {}
 
-  Value call(const vector<Value> &args) { return func(args); }
+  Value call(const vector<Value> &args) override { return func(args); }
+
+  string getType() const override { return "builtin"; }
+  std::shared_ptr<CrusaderCallable> clone() const override {
+    return std::make_shared<BuiltinFunction>(*this);
+  }
 };
 
 class ReturnException : public exception {

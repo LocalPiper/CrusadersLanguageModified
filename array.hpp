@@ -4,9 +4,8 @@
 #include "callable.hpp"
 #include "environment.hpp"
 #include "value.hpp"
+#include <memory>
 #include <stdexcept>
-#include <variant>
-#include <vector>
 
 using namespace std;
 
@@ -29,7 +28,7 @@ class CrusaderArray : public CrusaderCallable {
 
 public:
   CrusaderArray(vector<Value> &contents) : contents(contents) {}
-  Value call(const vector<Value> &args) {
+  Value call(const vector<Value> &args) override {
     if (args.size() < 1 || args.size() > 2) {
       throw runtime_error("Error: illegal number of arguments for array");
     }
@@ -41,6 +40,27 @@ public:
     }
     return 0;
   }
+
+  std::shared_ptr<CrusaderCallable> clone() const override {
+    std::vector<Value> copied_elements;
+
+    for (const auto &val : contents) {
+      if (std::holds_alternative<std::shared_ptr<CrusaderCallable>>(val)) {
+        auto callable = std::get<std::shared_ptr<CrusaderCallable>>(val);
+        if (callable->getType() == "array") {
+          copied_elements.push_back(callable->clone());
+        } else {
+          copied_elements.push_back(callable);
+        }
+      } else {
+        copied_elements.push_back(val);
+      }
+    }
+
+    return std::make_shared<CrusaderArray>(copied_elements);
+  }
+
+  string getType() const override { return "array"; }
 };
 
 class StringWrapper : public CrusaderCallable {
@@ -70,6 +90,10 @@ public:
     }
     throw runtime_error("Error: illegal number of arguments for string");
   }
+  std::shared_ptr<CrusaderCallable> clone() const {
+    return std::make_shared<StringWrapper>(*this);
+  }
+  string getType() const { return "string"; }
 };
 
 #endif // ARRAY_HPP

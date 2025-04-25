@@ -68,6 +68,8 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `QUESTION`    | `perchance`            | Ternary if expression (`?`)         |
 | `WHILE`       | `aslongas`             | While loop                          |
 | `FOR`         | `upon`                 | For loop                            |
+| `BREAK`       | `flee`                 | Break out of loop                   |
+| `CONTINUE`    | `onward`               | Continue to next iteration of loop  |
 | `VAR`         | `henceforth`           | Variable declaration                |
 | `TRUE`        | `aye`                  | Boolean `true`                      |
 | `FALSE`       | `nay`                  | Boolean `false`                     |
@@ -99,6 +101,8 @@ statement ::= print_statement
             | if_statement
             | while_statement
             | for_statement
+            | break_statement
+            | continue_statement
             | block
             | function_declaration
             | return_statement
@@ -123,6 +127,10 @@ if_statement ::= IF OP expression CP block ELSE block
 while_statement ::= WHILE OP expression CP block
 
 for_statement ::= FOR OP expression COMMA expression COMMA expression CP block
+
+break_statement ::= BREAK
+
+continue_statement ::= CONTINUE
 
 expression ::= assignment QUESTION expression ELSE expression
              | assignment

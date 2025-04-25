@@ -1,4 +1,5 @@
 #include "ast.hpp"
+#include "array.hpp"
 #include "callable.hpp"
 #include "environment.hpp"
 #include "function.hpp"
@@ -253,15 +254,23 @@ Value FunctionCallNode::evaluate() const {
   vector<Value> argValues;
   for (auto *arg : arguments)
     argValues.push_back(arg->evaluate());
+
+  Value calleeValue;
   if (callee) {
-    Value calleeValue = callee->evaluate();
-    if (auto func = get_if<shared_ptr<CrusaderCallable>>(&calleeValue)) {
-      return (*func)->call(argValues);
-    } else {
-      throw runtime_error("Error: Tried to call a non-function value");
-    }
+    calleeValue = callee->evaluate();
+  } else {
+    calleeValue = getVar(name);
   }
-  return get<shared_ptr<CrusaderCallable>>(getVar(name))->call(argValues);
+
+  if (auto func = get_if<shared_ptr<CrusaderCallable>>(&calleeValue)) {
+    return (*func)->call(argValues);
+  }
+
+  if (auto str = get_if<string>(&calleeValue)) {
+    auto wrapper = make_shared<StringWrapper>(name, *str);
+    return wrapper->call(argValues);
+  }
+  throw runtime_error("Error: Tried to call a non-function value");
 }
 
 void ReturnNode::evaluate() const { throw ReturnException(val->evaluate()); }

@@ -70,6 +70,7 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `FOR`         | `upon`                 | For loop                            |
 | `BREAK`       | `flee`                 | Break out of loop                   |
 | `CONTINUE`    | `onward`               | Continue to next iteration of loop  |
+| `COLON`       | `of`                   | Keyword `:` used in iteration `for (var x : arr)`  |
 | `VAR`         | `henceforth`           | Variable declaration                |
 | `TRUE`        | `aye`                  | Boolean `true`                      |
 | `FALSE`       | `nay`                  | Boolean `false`                     |
@@ -128,6 +129,7 @@ if_statement ::= IF OP expression CP block ELSE block
 while_statement ::= WHILE OP expression CP block
 
 for_statement ::= FOR OP expression COMMA expression COMMA expression CP block
+                | FOR OP VAR IDENTIFIER COLON expression CP block
 
 break_statement ::= BREAK
 
@@ -212,7 +214,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
-| 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ✅ DONE         |
 | 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 

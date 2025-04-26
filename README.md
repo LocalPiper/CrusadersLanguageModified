@@ -77,6 +77,7 @@ CrusadersLanguageModified is a successor to [SCLanguage](https://github.com/Loca
 | `PRINT`       | `proclaim`             | Print statement                     |
 | `ASSIGN`      | `bestow`               | Assignment (`=`)                    |
 | `FUNCTION`    | `inscribe`             | Function definition                 |
+| `LAMBDA`      | `whisper`              | Lambda function keyword             |
 | `COMMA`       | `also`                 | Comma (`,`) separator for function calls and definitions                |
 | `RETURN`      | `yield`                | Return statement                    |
 | `EOL`         | *(newline)*            | End of line                         |
@@ -179,6 +180,7 @@ primary ::= FALSE
           | STRING
           | OP expression CP
           | function_call
+          | lambda
 
 function_call ::= function_call OP arguments CP
                 | IDENTIFIER OP arguments CP
@@ -186,6 +188,8 @@ function_call ::= function_call OP arguments CP
 arguments ::= expression
             | expression COMMA arguments
             | ε
+
+lambda ::= LAMBDA OP arguments CP block
 
 ```
 
@@ -216,7 +220,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
 | 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ✅ DONE         |
 | 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ✅ DONE         |
-| 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ✅ DONE         |
 
 ### 🛞 Stage 2: Assembly
 

@@ -60,6 +60,8 @@ public:
     return std::make_shared<CrusaderArray>(copied_elements);
   }
 
+  int size() { return contents.size(); }
+
   string getType() const override { return "array"; }
 };
 
@@ -93,6 +95,8 @@ public:
   std::shared_ptr<CrusaderCallable> clone() const {
     return std::make_shared<StringWrapper>(*this);
   }
+
+  int size() { return str.size(); }
   string getType() const { return "string"; }
 };
 

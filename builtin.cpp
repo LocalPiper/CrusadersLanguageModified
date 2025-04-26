@@ -19,7 +19,7 @@ Value builtin_array(const vector<Value> &args) {
   }
 
   vector<Value> arr;
-  for (int i = 0; i <= args.size(); ++i)
+  for (int i = 0; i < args.size(); ++i)
     arr.push_back(args[i]);
   return make_shared<CrusaderArray>(arr);
 }
@@ -46,8 +46,29 @@ Value builtin_generate_array(const vector<Value> &args) {
   }
   return make_shared<CrusaderArray>(arr);
 }
+
+Value builtin_size(const vector<Value> &args) {
+  if (args.size() != 1)
+    throw runtime_error("size() takes exactly 1 argument, " +
+                        to_string(args.size()) + " were given.");
+
+  const Value &val = args[0];
+  if (holds_alternative<string>(val)) {
+    return (int)get<string>(val).size();
+  }
+  if (holds_alternative<shared_ptr<CrusaderCallable>>(val)) {
+    auto callable = get<shared_ptr<CrusaderCallable>>(val);
+    if (callable->getType() == "array") {
+      return (int)(dynamic_cast<CrusaderArray *>(callable.get())->size());
+    } else if (callable->getType() == "string") {
+      return (int)(dynamic_cast<StringWrapper *>(callable.get())->size());
+    }
+  }
+  throw runtime_error("'size' is not implemented for this type");
+}
 void initialize_builtins() {
   createVar("array", make_shared<BuiltinFunction>(builtin_array));
   createVar("generate_array",
             make_shared<BuiltinFunction>(builtin_generate_array));
+  createVar("size", make_shared<BuiltinFunction>(builtin_size));
 }

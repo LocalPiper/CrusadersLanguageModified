@@ -18,6 +18,60 @@ extern char* yytext;
 
 ASTNode* root = nullptr;
 
+
+// how to desugar 'forEach' into 'while'
+// here is how it looks in normal state:
+// for (var x : arr) {
+//    ...
+// }
+// here is how it looks in desugared state:
+// {
+//    var __iterable = arr;
+//    var __index = 0;
+//    while (__index < size(__iterable)) {
+//      var x = __iterable(__index);
+//      ...
+//      __index = __index + 1;
+//    }
+// }
+
+StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collection, BlockNode *body) {
+  BlockNode* outer = new BlockNode();
+  // var __iterable = collection
+  outer->addStatement(new ExpressionStatementNode(new CreationNode("__iterable", collection)));
+  // var __index = 0;
+  outer->addStatement(new ExpressionStatementNode(new CreationNode("__index", new NumberNode(0))));
+  // __index < size(__iterable)
+  ExpressionNode* condition = new BinaryOpNode(
+    "<",
+    new VariableNode("__index"),
+    new FunctionCallNode("size", { new VariableNode("__iterable") })
+  );
+  BlockNode* whileBody = new BlockNode();
+
+  // var varName = __iterable(__index)
+  whileBody->addStatement(new ExpressionStatementNode(new CreationNode(
+              varName, 
+              new FunctionCallNode(
+                new VariableNode("__iterable"), 
+                { new VariableNode("__index") }
+              )
+          )));
+  for (auto stmt : body->statements) whileBody->addStatement(stmt);
+
+  // __index = __index + 1
+  whileBody->addStatement(new ExpressionStatementNode(
+    new AssignmentNode(
+      "__index",
+      new BinaryOpNode("+", new VariableNode("__index"), new NumberNode(1))
+    )
+  ));
+
+  outer->addStatement(new WhileNode(condition, whileBody));
+  
+  return outer;
+}
+
 %}
 
 %union {
@@ -36,7 +90,7 @@ ASTNode* root = nullptr;
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH MOD OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE FOR BREAK CONTINUE FUNCTION COMMA RETURN QUESTION
+%token IF ELSE OB CB WHILE FOR BREAK CONTINUE FUNCTION COMMA RETURN QUESTION COLON
 %type <stmt> program
 %type <stmt> if_statement while_statement for_statement statement expression_statement print_statement function_declaration return_statement break_statement continue_statement
 %type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
@@ -135,6 +189,9 @@ for_statement:
                 loop->addStatement(new WhileNode($5, body, $7));
                 $$ = loop;
              }
+             | FOR OP VAR IDENTIFIER COLON expression CP block {
+                $$ = desugarForEach($4, $6, $8);
+             } 
              ;
 
 break_statement:

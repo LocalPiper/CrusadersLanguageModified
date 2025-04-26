@@ -31,6 +31,7 @@
 "upon"         { return FOR; }
 "flee"         { return BREAK; }
 "onward"       { return CONTINUE; }
+"of"           { return COLON; }
 "henceforth"   { return VAR; }
 "aye"        { return TRUE; }
 "nay"      { return FALSE; }

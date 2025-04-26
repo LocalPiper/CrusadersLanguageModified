@@ -90,10 +90,10 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
 %token <str> IDENTIFIER STRING
 %token PLUS MINUS STAR SLASH MOD OP CP EOL PRINT ASSIGN VAR
 %token EQ LT GT LEQ GEQ NEQ AND OR NOT TRUE FALSE
-%token IF ELSE OB CB WHILE FOR BREAK CONTINUE FUNCTION COMMA RETURN QUESTION COLON
+%token IF ELSE OB CB WHILE FOR BREAK CONTINUE FUNCTION LAMBDA COMMA RETURN QUESTION COLON
 %type <stmt> program
 %type <stmt> if_statement while_statement for_statement statement expression_statement print_statement function_declaration return_statement break_statement continue_statement
-%type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call
+%type <expr> expression assignment logical_or logical_and equalty comparison term factor unary primary function_call lambda
 %type <blk> block statements
 %type <strList> parameters
 %type <exprList> arguments
@@ -264,7 +264,8 @@ primary:
        | IDENTIFIER { $$ = new VariableNode($1); }
        | STRING { $$ = new StringNode($1); }
        | OP expression CP { $$ = $2; }
-       | function_call { $$ = $1; };
+       | function_call { $$ = $1; }
+       | lambda { $$ = $1; }
        ;
 
 function_call:
@@ -287,6 +288,12 @@ arguments:
          }
          | /* empty */ { $$ = new vector<ExpressionNode*>(); }
          ;
+
+lambda:
+      LAMBDA OP parameters CP block {
+        $$ = new LambdaNode(*$3, $5);
+        delete $3;
+      };
 
 %%
 

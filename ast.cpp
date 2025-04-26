@@ -284,6 +284,10 @@ Value FunctionCallNode::evaluate() const {
   throw runtime_error("Error: Tried to call a non-function value");
 }
 
+Value LambdaNode::evaluate() const {
+  return make_shared<CrusaderFunction>(params, body);
+}
+
 void ReturnNode::evaluate() const {
   if (val == nullptr) {
     throw ReturnException(0);

@@ -38,6 +38,7 @@
 "proclaim"      { return PRINT; }
 "bestow"     { return ASSIGN; }
 "inscribe"   { return FUNCTION; }
+"whisper"    { return LAMBDA; }
 "also"     { return COMMA; }
 "yield"   { return RETURN; }
 "perchance" { return QUESTION; }

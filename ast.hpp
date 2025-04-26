@@ -167,6 +167,16 @@ public:
   Value evaluate() const override;
 };
 
+class LambdaNode : public ExpressionNode {
+  vector<string> params;
+  BlockNode *body;
+
+public:
+  LambdaNode(vector<string> params, BlockNode *body)
+      : params(std::move(params)), body(body) {}
+  Value evaluate() const override;
+};
+
 class ReturnNode : public StatementNode {
 public:
   ExpressionNode *val;

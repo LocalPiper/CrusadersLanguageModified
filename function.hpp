@@ -3,18 +3,21 @@
 
 #include "ast.hpp"
 #include "callable.hpp"
+#include "environment.hpp"
 #include <exception>
 #include <functional>
+#include <memory>
 #include <utility>
 using namespace std;
 
 class CrusaderFunction : public CrusaderCallable {
   vector<string> params;
   BlockNode *body;
+  vector<unordered_map<string, shared_ptr<Value>>> capturedScopes;
 
 public:
   CrusaderFunction(vector<string> params, BlockNode *body)
-      : params(params), body(body) {}
+      : params(params), body(body), capturedScopes(scopes) {}
   Value call(const vector<Value> &args);
   std::shared_ptr<CrusaderCallable> clone() const;
   string getType() const;

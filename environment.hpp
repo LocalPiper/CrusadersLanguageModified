@@ -2,12 +2,13 @@
 #define ENVIRONMENT_HPP
 
 #include "value.hpp"
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 using namespace std;
 
-extern vector<unordered_map<string, Value>> scopes;
+extern vector<unordered_map<string, shared_ptr<Value>>> scopes;
 
 void enterScope();
 

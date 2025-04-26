@@ -215,7 +215,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
 | 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ✅ DONE         |
-| 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ✅ DONE         |
 | 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | 🛠️ IN PROGRESS         |
 
 ### 🛞 Stage 2: Assembly

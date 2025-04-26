@@ -203,7 +203,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 |-----|---------------------|-------------------------------------------------|-------------|------------------|
 | 1   | Lexer: New naming          | Rename keywords so they would make more sense  | ⚙️ Mandatory   | ✅ DONE         |
 | 2   | Interpreter: short-circuit          | Make logical operators (AND, OR) short circuit to remove unnecessary computations  | ⚙️ Mandatory   | ✅ DONE         |
-| 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
+| 3   | Parser + Interpreter: error handling          | Add better error handling. For compiletion errors - user should be able to see on which line of code an error occurred. For runtime errors - actual error messages instead of C++ messages | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ✅ DONE         |
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ✅ DONE         |
 | 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ✅ DONE         |
@@ -212,7 +212,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
-| 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 12   | Parser + Interpreter: iterator          | Add ability to iterate over values in array (or string). For example, for (x : arr) or for (c : str). Should be implemented after array support and for loop support  | ✨ Additional   | 🛠️ IN PROGRESS         |
 | 13   | Parser + Interpreter: closures          | Add ability to make closures | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 | 14   | Parser + Interpreter: lambda functions          | Add lambda functions support | ✨ Additional   | ❌ NOT IMPLEMENTED         |
 

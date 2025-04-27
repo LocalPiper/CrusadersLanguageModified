@@ -7,42 +7,25 @@
 #include "environment.hpp"
 
 extern int currentLine;  // Переменная для отслеживания текущей строки
+extern char* yytext;     // Переменная для получения текста токена
 
 using namespace std;
 
 int yylex();
 
 void yyerror(const char* s) {
-  cerr << "Error at line " << currentLine << ": " << s << endl;
+  cerr << "Error at line " << currentLine << ": " << s << " (before token: '" << yytext << "')" << endl;
 }
 
 extern char* yytext;
 
 ASTNode* root = nullptr;
 
-// how to desugar 'forEach' into 'while'
-// here is how it looks in normal state:
-// for (var x : arr) {
-//    ...
-// }
-// here is how it looks in desugared state:
-// {
-//    var __iterable = arr;
-//    var __index = 0;
-//    while (__index < size(__iterable)) {
-//      var x = __iterable(__index);
-//      ...
-//      __index = __index + 1;
-//    }
-// }
-
 StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collection, BlockNode *body) {
   BlockNode* outer = new BlockNode();
-  // var __iterable = collection
   outer->addStatement(new ExpressionStatementNode(new CreationNode("__iterable", collection)));
-  // var __index = 0
   outer->addStatement(new ExpressionStatementNode(new CreationNode("__index", new NumberNode(0))));
-  // __index < size(__iterable)
+  
   ExpressionNode* condition = new BinaryOpNode(
     "<",
     new VariableNode("__index"),
@@ -50,7 +33,6 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
   );
   BlockNode* whileBody = new BlockNode();
 
-  // var varName = __iterable(__index)
   whileBody->addStatement(new ExpressionStatementNode(new CreationNode(
               varName, 
               new FunctionCallNode(
@@ -60,7 +42,6 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
           )));
   for (auto stmt : body->statements) whileBody->addStatement(stmt);
 
-  // __index = __index + 1
   whileBody->addStatement(new ExpressionStatementNode(
     new AssignmentNode(
       "__index",

@@ -6,6 +6,7 @@
 #include <cstdio>
 
 extern int currentLine;  // Переменная для отслеживания текущей строки
+extern char* yytext;     // Переменная для получения текста токена
 
 int currentLine = 1; 
 %}

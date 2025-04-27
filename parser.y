@@ -15,6 +15,7 @@ using namespace std;
 int yylex();
 
 void yyerror(const char* s) {
+  if (*yytext != '\n')
   cerr << "Error at line " << currentLine << ": "
        << s << " (before token: '" << yytext << "')" << endl;
 }

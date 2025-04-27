@@ -1,6 +1,13 @@
 %{
 #include "ast.hpp"
 #include "parser.tab.hpp"
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+
+extern int currentLine;  // Переменная для отслеживания текущей строки
+
+int currentLine = 1; 
 %}
 
 %%
@@ -42,7 +49,7 @@
 "also"     { return COMMA; }
 "yield"   { return RETURN; }
 "perchance" { return QUESTION; }
-\n             { return EOL; }
+\n             { currentLine++; return EOL; }
 [ \t]          {}
 
 [a-zA-Z_][a-zA-Z_0-9]* { yylval.str = strdup(yytext); return IDENTIFIER; }
@@ -54,4 +61,3 @@
 int yywrap() {
     return 1;
 }
-

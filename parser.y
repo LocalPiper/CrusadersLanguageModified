@@ -5,19 +5,20 @@
 #include "ast.hpp"
 #include "builtin.hpp"
 #include "environment.hpp"
+
+extern int currentLine;  // Переменная для отслеживания текущей строки
+
 using namespace std;
 
 int yylex();
 
 void yyerror(const char* s) {
-  cerr << "Error: " << s << endl;
+  cerr << "Error at line " << currentLine << ": " << s << endl;
 }
 
 extern char* yytext;
 
-
 ASTNode* root = nullptr;
-
 
 // how to desugar 'forEach' into 'while'
 // here is how it looks in normal state:
@@ -39,7 +40,7 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
   BlockNode* outer = new BlockNode();
   // var __iterable = collection
   outer->addStatement(new ExpressionStatementNode(new CreationNode("__iterable", collection)));
-  // var __index = 0;
+  // var __index = 0
   outer->addStatement(new ExpressionStatementNode(new CreationNode("__index", new NumberNode(0))));
   // __index < size(__iterable)
   ExpressionNode* condition = new BinaryOpNode(
@@ -307,4 +308,3 @@ int main() {
     }
     return 0;
 }
-

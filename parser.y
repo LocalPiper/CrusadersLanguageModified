@@ -7,32 +7,60 @@
 #include "builtin.hpp"
 #include "environment.hpp"
 
-extern int currentLine;  // Переменная для отслеживания текущей строки
-extern char* yytext;     // Переменная для получения текста токена
+extern int yylineno;
+extern char* yytext;
 
 using namespace std;
 
 int yylex();
 
+bool is_good = true;
+
+int last_good_line = 1;
+char* last_good_text = nullptr;
+
+
 void yyerror(const char* s) {
-  if (*yytext != '\n')
-  cerr << "Error at line " << currentLine << ": "
-       << s << " (before token: '" << yytext << "')" << endl;
+    cerr << "Syntax error on line " << last_good_line;
+    if (last_good_line && *last_good_text) {
+      cerr << " near token '";
+      for (char* p = last_good_text; *p; ++p) {
+        if (*p == '\n' || *p == '\r') cerr << "\\n";
+        else cerr << *p;
+      }
+      cerr << "'";
+    }
+    cerr << ": " << s << endl;
 }
 
 ASTNode* root = nullptr;
 
-// Распыление foreach в while
+// how to desugar 'forEach' into 'while'
+// here is how it looks in normal state:
+// for (var x : arr) {
+//    ...
+// }
+// here is how it looks in desugared state:
+// {
+//    var __iterable = arr;
+//    var __index = 0;
+//    while (__index < size(__iterable)) {
+//      var x = __iterable(__index);
+//      ...
+//      __index = __index + 1;
+//    }
+// }
 StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collection, BlockNode *body) {
   BlockNode* outer = new BlockNode();
-  // инициализация итератора и индекса
+  // var __iterable = collection 
   outer->addStatement(new ExpressionStatementNode(
     new CreationNode("__iterable", collection)
   ));
+  // var __index = 0;
   outer->addStatement(new ExpressionStatementNode(
     new CreationNode("__index", new NumberNode(0))
   ));
-
+  // __index < size(__iterable)
   ExpressionNode* condition = new BinaryOpNode(
     "<",
     new VariableNode("__index"),
@@ -40,7 +68,7 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
   );
 
   BlockNode* whileBody = new BlockNode();
-  // тело цикла: присвоение varName и вложенные statements
+  // var varName = __iterable(__index)
   whileBody->addStatement(new ExpressionStatementNode(
     new CreationNode(
       varName,
@@ -51,7 +79,7 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
     )
   ));
   for (auto stmt : body->statements) whileBody->addStatement(stmt);
-  // инкремент индекса
+  // __index = __index + 1
   whileBody->addStatement(new ExpressionStatementNode(
     new AssignmentNode(
       "__index",
@@ -64,7 +92,7 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
   ));
 
   outer->addStatement(new WhileNode(condition, whileBody));
-  return outer;  // обязательно вернуть
+  return outer; 
 }
 %}
 
@@ -101,32 +129,28 @@ StatementNode* desugarForEach(const std::string &varName, ExpressionNode *collec
 
 %%
 program:
-      statements
-    | program error EOL {
-        yyerror("syntax error in program, skipping to end of line");
-        yyerrok; yyclearin;
-      }
-    { root = $1; }
+      statements { root = $1; }
     ;
 
 statements:
-      statements statement EOL {
-        $$ = $1;
-        $$->addStatement($2);
-      }
-    | statements error EOL {
-        yyerror("syntax error in statements, skipping to end of line");
-        yyerrok; yyclearin;
-        $$ = $1;
-      }
-    | statement EOL {
-        $$ = new BlockNode();
-        $$->addStatement($1);
-      }
-    | EOL {
-        $$ = new BlockNode();
-      }
-    ;
+          statement EOL statements { 
+            $$ = new BlockNode();
+            $$->addStatement($1);
+            for (auto s : $3->statements) $$->addStatement(s);
+            delete $3;
+          }
+          | statement EOL { 
+            $$ = new BlockNode(); 
+            $$->addStatement($1); 
+          }
+          | error EOL statements {
+            yyclearin;
+            yyerrok;
+            $$ = $3;
+          }
+          | EOL statements { $$ = $2; }
+          | EOL { $$ = new BlockNode(); }
+          ;
 
 statement:
       print_statement
@@ -145,12 +169,8 @@ block:
       OB statements CB {
         $$ = $2;
       }
-    | OB error CB {
-        yyerror("syntax error in block, skipping to closing brace");
-        yyerrok; yyclearin;
-        $$ = new BlockNode();
-      }
-    ;
+      | OB error CB { $$ = new BlockNode(); yyerrok; }
+      ;
 
 print_statement:
       PRINT expression { $$ = new PrintNode($2); }
@@ -292,11 +312,12 @@ lambda:
 %%
 
 int main() {
-  if (yyparse() == 0 && root) {
+  if (yyparse() == 0 && root && is_good) {
     enterScope();
     initialize_builtins();
     dynamic_cast<StatementNode*>(root)->evaluate();
     exitScope();
   }
+  if (last_good_text) free(last_good_text);
   return 0;
 }

@@ -570,12 +570,19 @@ char *yytext;
 #include <cstring>
 #include <cstdio>
 
-extern int currentLine;  // Переменная для отслеживания текущей строки
-extern char* yytext;     // Переменная для получения текста токена
+extern int yylineno;
 
-int currentLine = 1; 
-#line 578 "lexer.tab.cpp"
-#line 579 "lexer.tab.cpp"
+extern int last_good_line;
+extern char* last_good_text;
+
+#define UPDATE_GOOD_TOKEN() do { \
+    if (last_good_text) free(last_good_text); \
+    last_good_line = yylineno; \
+    last_good_text = strdup(yytext); \
+} while(0)
+
+#line 585 "lexer.tab.cpp"
+#line 586 "lexer.tab.cpp"
 
 #define INITIAL 0
 
@@ -792,10 +799,10 @@ YY_DECL
 		}
 
 	{
-#line 14 "lexer.l"
+#line 21 "lexer.l"
 
 
-#line 799 "lexer.tab.cpp"
+#line 806 "lexer.tab.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -854,222 +861,222 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "lexer.l"
-{ yylval.dnum = atof(yytext); return DOUBLE; }
+#line 23 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); yylval.dnum = atof(yytext); return DOUBLE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "lexer.l"
-{ yylval.num = atoi(yytext); return NUMBER; }
+#line 24 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); yylval.num = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 18 "lexer.l"
-{ return PLUS; }
+#line 25 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return PLUS; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 19 "lexer.l"
-{ return MINUS; }
+#line 26 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return MINUS; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 20 "lexer.l"
-{ return STAR; }
+#line 27 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return STAR; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 21 "lexer.l"
-{ return SLASH; }
+#line 28 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return SLASH; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 22 "lexer.l"
-{ return MOD; }
+#line 29 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return MOD; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 23 "lexer.l"
-{ return EQ; }
+#line 30 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return EQ; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "lexer.l"
-{ return LT; }
+#line 31 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return LT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "lexer.l"
-{ return GT; }
+#line 32 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return GT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "lexer.l"
-{ return LEQ; }
+#line 33 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return LEQ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 27 "lexer.l"
-{ return GEQ; }
+#line 34 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return GEQ; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 28 "lexer.l"
-{ return NEQ; }
+#line 35 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return NEQ; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 29 "lexer.l"
-{ return AND; }
+#line 36 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return AND; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 30 "lexer.l"
-{ return OR; }
+#line 37 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return OR; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 31 "lexer.l"
-{ return NOT; }
+#line 38 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return NOT; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 32 "lexer.l"
-{ return OP; }
+#line 39 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return OP; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 33 "lexer.l"
-{ return CP; }
+#line 40 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return CP; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 34 "lexer.l"
-{ return OB; }
+#line 41 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return OB; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 35 "lexer.l"
-{ return CB; }
+#line 42 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return CB; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 36 "lexer.l"
-{ return IF; }
+#line 43 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return IF; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 37 "lexer.l"
-{ return ELSE; }
+#line 44 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return ELSE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 38 "lexer.l"
-{ return WHILE; }
+#line 45 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return WHILE; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 39 "lexer.l"
-{ return FOR; }
+#line 46 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return FOR; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 40 "lexer.l"
-{ return BREAK; }
+#line 47 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return BREAK; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 41 "lexer.l"
-{ return CONTINUE; }
+#line 48 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return CONTINUE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 42 "lexer.l"
-{ return COLON; }
+#line 49 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return COLON; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 43 "lexer.l"
-{ return VAR; }
+#line 50 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return VAR; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 44 "lexer.l"
-{ return TRUE; }
+#line 51 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return TRUE; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 45 "lexer.l"
-{ return FALSE; }
+#line 52 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return FALSE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 46 "lexer.l"
-{ return PRINT; }
+#line 53 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return PRINT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 47 "lexer.l"
-{ return ASSIGN; }
+#line 54 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return ASSIGN; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 48 "lexer.l"
-{ return FUNCTION; }
+#line 55 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return FUNCTION; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 49 "lexer.l"
-{ return LAMBDA; }
+#line 56 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return LAMBDA; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 50 "lexer.l"
-{ return COMMA; }
+#line 57 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return COMMA; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 51 "lexer.l"
-{ return RETURN; }
+#line 58 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return RETURN; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 52 "lexer.l"
-{ return QUESTION; }
+#line 59 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return QUESTION; }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 53 "lexer.l"
-{ currentLine++; return EOL; }
+#line 60 "lexer.l"
+{ ++yylineno; return EOL; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 61 "lexer.l"
 {}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 56 "lexer.l"
-{ yylval.str = strdup(yytext); return IDENTIFIER; }
+#line 63 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); yylval.str = strdup(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 57 "lexer.l"
-{ yylval.str = strdup(yytext + 1); yylval.str[strlen(yylval.str) - 1] = '\0'; return STRING; }
+#line 64 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); yylval.str = strdup(yytext + 1); yylval.str[strlen(yylval.str) - 1] = '\0'; return STRING; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 58 "lexer.l"
-{ return 0; }
+#line 65 "lexer.l"
+{ UPDATE_GOOD_TOKEN(); return yytext[0]; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 67 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1073 "lexer.tab.cpp"
+#line 1080 "lexer.tab.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2074,7 +2081,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 60 "lexer.l"
+#line 67 "lexer.l"
 
 
 int yywrap() {

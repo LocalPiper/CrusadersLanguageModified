@@ -226,7 +226,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 
 | #️⃣ | Feature Name                  | Description                                                                                                                        | Priority     | Status            |
 | --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------- |
-| 1   | Semantic Analysis            | Detect illegal constructs not caught by parser (e.g., `break` outside loop, `return` outside function, invalid closure usage)      | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 1   | Semantic Analysis            | Detect illegal constructs not caught by parser (e.g., `break` outside loop, `return` outside function, invalid closure usage)      | ⚙️ Mandatory | 🛠️ IN PROGRESS |
 | 2   | IR Format Decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
 | 3   | IR Generator                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
 | 4   | Constant Folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |

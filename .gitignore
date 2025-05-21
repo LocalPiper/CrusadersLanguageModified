@@ -1,4 +1,2 @@
-clm
-lexer.tab.cpp
-parser.tab.cpp
-parser.tab.hpp
+bin/
+build/

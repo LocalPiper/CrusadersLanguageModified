@@ -213,8 +213,8 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 4   | Parser + Interpreter: FP values support          | Add floating point values support  | ⚙️ Mandatory   | ✅ DONE         |
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ✅ DONE         |
 | 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ✅ DONE         |
-| 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | ❌ NOT IMPLEMENTED         |
-| 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ❌ NOT IMPLEMENTED         |
+| 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
+| 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | 🛠️ IN PROGRESS         |
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
@@ -224,4 +224,14 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 
 ### 🛞 Stage 2: Assembly
 
-TODO
+| #️⃣ | Feature Name                  | Description                                                                                                                        | Priority     | Status            |
+| --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------- |
+| 1   | Semantic Analysis            | Detect illegal constructs not caught by parser (e.g., `break` outside loop, `return` outside function, invalid closure usage)      | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 2   | IR Format Decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 3   | IR Generator                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 4   | Constant Folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 5   | Dead Code Elimination        | (Optional) Remove unreachable code for minimal optimization                                                                        | ✨ Additional | ❌ NOT IMPLEMENTED |
+| 6   | Liveness Analysis            | (Optional) Used to optimize register allocation later                                                                              | ✨ Additional | ❌ NOT IMPLEMENTED |
+| 7   | Register Allocation Strategy | Decide how to assign registers or simulate them (e.g., stack-based VM, linear scan, graph coloring)                                | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 8   | ASM Code Generator           | Convert optimized IR into x86-64 / RISC-V / other architecture ASM                                                                 | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 9  | Optimizations (Additional)   | Add any other optimizations (e.g., inlining, loop unrolling, common subexpr elimination)                                           | ✨ Additional | ❌ NOT IMPLEMENTED |

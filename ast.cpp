@@ -71,7 +71,8 @@ bool isValidOperation(const string &op, TypeRank type) {
 Value applyBinaryOp(const string &op, const Value &lval, const Value &rval) {
   TypeRank resultingRank = promote(lval, rval);
   if (!isValidOperation(op, resultingRank)) {
-    cerr << "Error: Operation '" << op << "' not valid for types." << endl;
+    throw runtime_error("Error: Operation '" + op +
+                        "' not valid for provided types.");
   }
 
   switch (resultingRank) {
@@ -157,8 +158,7 @@ Value applyBinaryOp(const string &op, const Value &lval, const Value &rval) {
     break;
   }
   }
-  cerr << "Unhandled binary operation. \n";
-  return 0;
+  throw runtime_error("Error: Unhandled binary operation.");
 }
 
 Value BinaryOpNode::evaluate() const {
@@ -179,11 +179,11 @@ Value UnaryOpNode::evaluate() const {
   if (op == "-") {
     if (holds_alternative<int>(result))
       return -get<int>(result);
-    cerr << "Error: Unary '-' can only be applied to integers." << endl;
+    throw runtime_error("Error: Unary '-' can only be applied to integers.");
   } else if (op == "!") {
     return !isTruthy(result);
   }
-  cerr << "Error: Unknown or invalid unary operator " << op << endl;
+  throw runtime_error("Error: Unknown or invalid unary operator " + op);
   return 0;
 }
 

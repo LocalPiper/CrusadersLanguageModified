@@ -1,6 +1,6 @@
 #include "environment.hpp"
-#include <iostream>
 #include <memory>
+#include <stdexcept>
 using namespace std;
 
 vector<unordered_map<string, shared_ptr<Value>>> scopes = {{}};
@@ -17,7 +17,7 @@ Value getVar(const string &name) {
     if (it->count(name))
       return *((*it)[name]);
   }
-  cerr << "Error: Undefined variable " << name << endl;
+  throw runtime_error("Error: Undefined variable " + name);
   return 0;
 }
 
@@ -32,5 +32,5 @@ void setVar(const string &name, Value value) {
       return;
     }
   }
-  cerr << "Error: Undefined variable " << name << endl;
+  throw runtime_error("Error: Undefined variable " + name);
 }

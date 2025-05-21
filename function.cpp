@@ -1,7 +1,8 @@
 #include "function.hpp"
 #include "environment.hpp"
-#include <iostream>
 #include <memory>
+#include <stdexcept>
+#include <string>
 using namespace std;
 
 std::shared_ptr<CrusaderCallable> CrusaderFunction::clone() const {
@@ -12,9 +13,8 @@ string CrusaderFunction::getType() const { return "function"; }
 
 Value CrusaderFunction::call(const vector<Value> &args) {
   if (args.size() != params.size()) {
-    cerr << "Error: Function expected " << params.size() << " arguments, got "
-         << args.size() << ".\n";
-    return 0;
+    throw runtime_error("Error: Function expected " + to_string(params.size()) +
+                        " arguments, got " + to_string(args.size()));
   }
 
   for (const auto &captured : capturedScopes) {

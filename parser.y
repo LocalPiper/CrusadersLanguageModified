@@ -315,7 +315,14 @@ int main() {
   if (yyparse() == 0 && root && is_good) {
     enterScope();
     initialize_builtins();
-    dynamic_cast<StatementNode*>(root)->evaluate();
+    try {
+      dynamic_cast<StatementNode*>(root)->evaluate();
+    } catch (const std::runtime_error &exc) {
+      cerr << exc.what() << endl;
+      exitScope();
+      if (last_good_text) free(last_good_text);
+      return 1;
+    } 
     exitScope();
   }
   if (last_good_text) free(last_good_text);

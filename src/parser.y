@@ -31,6 +31,7 @@ void yyerror(const char* s) {
       cerr << "'";
     }
     cerr << ": " << s << endl;
+    is_good = false;
 }
 
 ASTNode* root = nullptr;
@@ -307,6 +308,24 @@ parameters:
 
 lambda:
       LAMBDA OP parameters CP block   { $$ = new LambdaNode(*$3, $5); delete $3; }
+      | LAMBDA OP parameters CP OB return_statement CB {
+        BlockNode* blk = new BlockNode();
+        blk->addStatement($6);
+        $$ = new LambdaNode(*$3, blk);
+        delete $3;
+      }
+      | LAMBDA OP parameters CP OB print_statement CB {
+        BlockNode* blk = new BlockNode();
+        blk->addStatement($6);
+        $$ = new LambdaNode(*$3, blk);
+        delete $3;
+      }
+      | LAMBDA OP parameters CP OB expression_statement CB {
+        BlockNode* blk = new BlockNode();
+        blk->addStatement($6);
+        $$ = new LambdaNode(*$3, blk);
+        delete $3;
+      }
     ;
 
 %%

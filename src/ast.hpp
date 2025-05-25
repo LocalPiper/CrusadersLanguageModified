@@ -7,9 +7,12 @@
 
 using namespace std;
 
+class Visitor;
+
 class ASTNode {
 public:
   virtual ~ASTNode() = default;
+  virtual void accept(Visitor &v) const = 0;
 };
 
 class ExpressionNode : public ASTNode {
@@ -27,6 +30,7 @@ public:
   ExpressionNode *expr;
   ExpressionStatementNode(ExpressionNode *e) : expr(e) {}
   void evaluate() const override { expr->evaluate(); }
+  void accept(Visitor &v) const override;
 };
 
 class DoubleNode : public ExpressionNode {
@@ -34,6 +38,7 @@ public:
   double value;
   DoubleNode(double val) : value(val) {}
   Value evaluate() const override { return value; }
+  void accept(Visitor &v) const override;
 };
 
 class NumberNode : public ExpressionNode {
@@ -41,6 +46,7 @@ public:
   int value;
   NumberNode(int val) : value(val) {}
   Value evaluate() const override { return value; }
+  void accept(Visitor &v) const override;
 };
 
 class StringNode : public ExpressionNode {
@@ -48,6 +54,7 @@ public:
   string value;
   StringNode(string val) : value(val) {}
   Value evaluate() const override { return value; }
+  void accept(Visitor &v) const override;
 };
 
 class VariableNode : public ExpressionNode {
@@ -55,6 +62,7 @@ public:
   string name;
   VariableNode(const string &n) : name(n) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class BinaryOpNode : public ExpressionNode {
@@ -67,6 +75,7 @@ public:
       : op(o), left(l), right(r) {}
 
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class UnaryOpNode : public ExpressionNode {
@@ -77,6 +86,7 @@ public:
   UnaryOpNode(const string &o, ExpressionNode *r) : op(o), right(r) {}
 
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class PrintNode : public StatementNode {
@@ -84,6 +94,7 @@ public:
   ExpressionNode *expression;
   PrintNode(ExpressionNode *expr) : expression(expr) {}
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class AssignmentNode : public ExpressionNode {
@@ -93,6 +104,7 @@ public:
   AssignmentNode(const string &n, ExpressionNode *expr)
       : name(n), expression(expr) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class CreationNode : public ExpressionNode {
@@ -102,6 +114,7 @@ public:
   CreationNode(const string &n, ExpressionNode *expr)
       : name(n), expression(expr) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class IfNode : public StatementNode {
@@ -113,6 +126,7 @@ public:
          StatementNode *elseB = nullptr)
       : condition(cond), thenBlock(thenB), elseBlock(elseB) {}
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class TernaryIfNode : public ExpressionNode {
@@ -123,6 +137,7 @@ public:
   TernaryIfNode(ExpressionNode *cond, ExpressionNode *then, ExpressionNode *els)
       : condition(cond), thenExpr(then), elseExpr(els) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class BlockNode : public StatementNode {
@@ -130,6 +145,7 @@ public:
   vector<StatementNode *> statements;
   void addStatement(StatementNode *stmt) { statements.push_back(stmt); }
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class WhileNode : public StatementNode {
@@ -142,6 +158,7 @@ public:
   WhileNode(ExpressionNode *cond, StatementNode *blk, ExpressionNode *step)
       : condition(cond), block(blk), step(step) {}
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class FunctionDeclarationNode : public StatementNode {
@@ -153,6 +170,7 @@ public:
                           BlockNode *b)
       : name(n), parameters(params), body(b) {}
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class FunctionCallNode : public ExpressionNode {
@@ -165,16 +183,17 @@ public:
   FunctionCallNode(ExpressionNode *callee, const vector<ExpressionNode *> &args)
       : callee(callee), arguments(args) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class LambdaNode : public ExpressionNode {
   vector<string> params;
-  BlockNode *body;
-
 public:
+  BlockNode *body;
   LambdaNode(vector<string> params, BlockNode *body)
       : params(std::move(params)), body(body) {}
   Value evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class ReturnNode : public StatementNode {
@@ -183,16 +202,19 @@ public:
   ReturnNode() {}
   ReturnNode(ExpressionNode *val) : val(val) {}
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class BreakNode : public StatementNode {
 public:
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 class ContinueNode : public StatementNode {
 public:
   void evaluate() const override;
+  void accept(Visitor &v) const override;
 };
 
 #endif // AST_HPP

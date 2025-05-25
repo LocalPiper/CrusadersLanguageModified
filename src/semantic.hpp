@@ -1,5 +1,6 @@
 #ifndef SEMANTIC_HPP
 #define SEMANTIC_HPP
+#include <string>
 
 class ExpressionNode;
 class StatementNode;
@@ -26,6 +27,9 @@ class ContinueNode;
 
 class Visitor {
 public:
+  std::string scopeType;
+  virtual bool checkScope(const char c);
+
   virtual void visit(const ExpressionNode *expr);
   virtual void visit(const StatementNode *stmt);
 

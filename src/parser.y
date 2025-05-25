@@ -6,6 +6,7 @@
 #include "ast.hpp"
 #include "builtin.hpp"
 #include "environment.hpp"
+#include "semantic.hpp"
 
 extern int yylineno;
 extern char* yytext;
@@ -335,6 +336,8 @@ int main() {
     enterScope();
     initialize_builtins();
     try {
+      Visitor v;
+      dynamic_cast<StatementNode*>(root)->accept(v);
       dynamic_cast<StatementNode*>(root)->evaluate();
     } catch (const std::runtime_error &exc) {
       cerr << exc.what() << endl;

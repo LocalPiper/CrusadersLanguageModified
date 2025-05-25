@@ -3,6 +3,7 @@
 #include "callable.hpp"
 #include "environment.hpp"
 #include "function.hpp"
+#include "semantic.hpp"
 #include <algorithm>
 #include <iostream>
 #include <memory>
@@ -298,3 +299,44 @@ void ReturnNode::evaluate() const {
 void BreakNode::evaluate() const { throw BreakException(); }
 
 void ContinueNode::evaluate() const { throw ContinueException(); }
+
+void ExpressionStatementNode::accept(Visitor &v) const { v.visitExpressionStatementNode(this); }
+
+void DoubleNode::accept(Visitor &v) const { v.visitDoubleNode(this); }
+
+void NumberNode::accept(Visitor &v) const { v.visitNumberNode(this); }
+
+void StringNode::accept(Visitor &v) const { v.visitStringNode(this); }
+
+void VariableNode::accept(Visitor &v) const { v.visitVariableNode(this); }
+
+void BinaryOpNode::accept(Visitor &v) const { v.visitBinaryOpNode(this); }
+
+void UnaryOpNode::accept(Visitor &v) const { v.visitUnaryOpNode(this); }
+
+void PrintNode::accept(Visitor &v) const { v.visitPrintNode(this); }
+
+void AssignmentNode::accept(Visitor &v) const { v.visitAssignmentNode(this); }
+
+void CreationNode::accept(Visitor &v) const { v.visitCreationNode(this); }
+
+void IfNode::accept(Visitor &v) const { v.visitIfNode(this); }
+
+void TernaryIfNode::accept(Visitor &v) const { v.visitTernaryIfNode(this); }
+
+void BlockNode::accept(Visitor &v) const { v.visitBlockNode(this); }
+
+void WhileNode::accept(Visitor &v) const { v.visitWhileNode(this); }
+
+void FunctionDeclarationNode::accept(Visitor &v) const { v.visitFunctionDeclarationNode(this); }
+
+void FunctionCallNode::accept(Visitor &v) const { v.visitFunctionCallNode(this); }
+
+void LambdaNode::accept(Visitor &v) const { v.visitLambdaNode(this); }
+
+void ReturnNode::accept(Visitor &v) const { v.visitReturnNode(this); }
+
+void BreakNode::accept(Visitor &v) const { v.visitBreakNode(this); }
+
+void ContinueNode::accept(Visitor &v) const { v.visitContinueNode(this); }
+

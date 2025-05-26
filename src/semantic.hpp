@@ -26,10 +26,8 @@ class BreakNode;
 class ContinueNode;
 
 class Visitor {
-public:
   std::string scopeType;
-  virtual bool checkScope(const char c);
-
+public:
   virtual void visit(const ExpressionNode *expr);
   virtual void visit(const StatementNode *stmt);
 

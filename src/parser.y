@@ -3,10 +3,13 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <string>
 #include "ast.hpp"
 #include "builtin.hpp"
 #include "environment.hpp"
 #include "semantic.hpp"
+#include "ir.hpp"
+#include "ir_struct.hpp"
 
 extern int yylineno;
 extern char* yytext;
@@ -331,14 +334,27 @@ lambda:
 
 %%
 
-int main() {
+int main(int argc, char* argv[]) {
+  bool irFlag = false;
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg == "-s") {
+      irFlag = true;
+    }
+  }
   if (yyparse() == 0 && root && is_good) {
     enterScope();
     initialize_builtins();
     try {
       Visitor v;
       dynamic_cast<StatementNode*>(root)->accept(v);
-      dynamic_cast<StatementNode*>(root)->evaluate();
+      if (!irFlag) {
+        dynamic_cast<StatementNode*>(root)->evaluate();
+      } else {
+        IRGenerator irg;
+        dynamic_cast<StatementNode*>(root)->accept(irg);
+        printIR(irg.code);
+      }
     } catch (const std::runtime_error &exc) {
       cerr << exc.what() << endl;
       exitScope();

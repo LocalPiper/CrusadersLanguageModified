@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool Visitor::checkScope(const char c) {
+bool checkScope(const char c, std::string &scopeType) {
   for (auto it = scopeType.rbegin(); it != scopeType.rend(); --it) {
     if ((*it) == c) return true;
   }
@@ -91,7 +91,7 @@ void Visitor::visitWhileNode(const WhileNode *node) {
 }
 
 void Visitor::visitFunctionDeclarationNode(const FunctionDeclarationNode *node) {
-  if (checkScope('I') || checkScope('W') || checkScope('L')) throw runtime_error("Error: function can only be declared outside or inside another non-lambda function");
+  if (checkScope('I', scopeType) || checkScope('W', scopeType) || checkScope('L', scopeType)) throw runtime_error("Error: function can only be declared outside or inside another non-lambda function");
   scopeType.push_back('F');
   visit(node->body);
   scopeType.pop_back();
@@ -111,16 +111,16 @@ void Visitor::visitLambdaNode(const LambdaNode *node) {
 }
 
 void Visitor::visitReturnNode(const ReturnNode *node) {
-  if (!checkScope('F') && !checkScope('L')) throw runtime_error("Error: return outside function declaration");
+  if (!checkScope('F', scopeType) && !checkScope('L', scopeType)) throw runtime_error("Error: return outside function declaration");
   visit(node->val);
 }
 
 void Visitor::visitBreakNode(const BreakNode *node) {
-  if (!checkScope('W')) throw runtime_error("Error: break outside loop");
+  if (!checkScope('W', scopeType)) throw runtime_error("Error: break outside loop");
   return;
 }
 
 void Visitor::visitContinueNode(const ContinueNode *node) {
-  if (!checkScope('W')) throw runtime_error("Error: continue outside loop");
+  if (!checkScope('W', scopeType)) throw runtime_error("Error: continue outside loop");
   return;
 }

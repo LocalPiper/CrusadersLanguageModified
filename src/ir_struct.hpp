@@ -48,9 +48,11 @@ inline void printIR(const IR &ir) {
   for (const auto &instr : ir) {
     switch (instr.opcode) {
     case IROpcode::LOAD_CONST:
-    case IROpcode::LOAD_STRING:
     case IROpcode::LOAD_VAR:
       std::cout << instr.result << " = " << instr.arg1 << "\n";
+      break;
+    case IROpcode::LOAD_STRING:
+      std::cout << instr.result << " = \"" << instr.arg1 << "\"\n";
       break;
     case IROpcode::STORE_VAR:
       std::cout << instr.arg1 << " = " << instr.arg2 << "\n";

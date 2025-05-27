@@ -14,6 +14,7 @@ PARSER_CPP_OUT = $(BUILD_DIR)/parser.tab.cpp
 PARSER_HPP_OUT = $(BUILD_DIR)/parser.tab.hpp
 
 SRC_FILES = $(SRC_DIR)/ast.cpp \
+						$(SRC_DIR)/operations.cpp \
             $(SRC_DIR)/function.cpp \
             $(SRC_DIR)/environment.cpp \
             $(SRC_DIR)/builtin.cpp \
@@ -21,6 +22,7 @@ SRC_FILES = $(SRC_DIR)/ast.cpp \
 						$(SRC_DIR)/ir.cpp
 
 HDR_FILES = $(SRC_DIR)/ast.hpp \
+						$(SRC_DIR)/operations.hpp \
             $(SRC_DIR)/function.hpp \
             $(SRC_DIR)/environment.hpp \
             $(SRC_DIR)/builtin.hpp \

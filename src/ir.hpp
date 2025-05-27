@@ -1,7 +1,7 @@
 #ifndef IR_HPP
 #define IR_HPP
-#include "semantic.hpp"
 #include "ir_struct.hpp"
+#include "semantic.hpp"
 
 class ExpressionNode;
 class StatementNode;
@@ -39,7 +39,8 @@ public:
   void visit(const ExpressionNode *expr) override;
   void visit(const StatementNode *stmt) override;
 
-  void visitExpressionStatementNode(const ExpressionStatementNode *node) override;
+  void
+  visitExpressionStatementNode(const ExpressionStatementNode *node) override;
   void visitDoubleNode(const DoubleNode *node) override;
   void visitNumberNode(const NumberNode *node) override;
   void visitStringNode(const StringNode *node) override;
@@ -53,13 +54,13 @@ public:
   void visitTernaryIfNode(const TernaryIfNode *node) override;
   void visitBlockNode(const BlockNode *node) override;
   void visitWhileNode(const WhileNode *node) override;
-  void visitFunctionDeclarationNode(const FunctionDeclarationNode *node) override;
+  void
+  visitFunctionDeclarationNode(const FunctionDeclarationNode *node) override;
   void visitFunctionCallNode(const FunctionCallNode *node) override;
   void visitLambdaNode(const LambdaNode *node) override;
   void visitReturnNode(const ReturnNode *node) override;
   void visitBreakNode(const BreakNode *node) override;
   void visitContinueNode(const ContinueNode *node) override;
-
 };
 
 #endif // IR_HPP

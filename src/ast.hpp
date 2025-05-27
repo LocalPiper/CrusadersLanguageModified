@@ -188,6 +188,7 @@ public:
 
 class LambdaNode : public ExpressionNode {
   vector<string> params;
+
 public:
   BlockNode *body;
   LambdaNode(vector<string> params, BlockNode *body)

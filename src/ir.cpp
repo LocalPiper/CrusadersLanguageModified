@@ -1,5 +1,16 @@
 #include "ir.hpp"
 #include "ast.hpp"
+#include "ir_struct.hpp"
+#include <string>
+#include <vector>
+
+struct LoopContext {
+  std::string startLabel;
+  std::string stepLabel;
+  std::string endLabel;
+};
+
+std::vector<LoopContext> loopStack;
 
 std::string IRGenerator::newTemp() {
   return "%t" + std::to_string(tempCounter++);
@@ -9,26 +20,25 @@ std::string IRGenerator::newLabel() {
   return "L" + std::to_string(labelCounter++);
 }
 
-void IRGenerator::visit(const ExpressionNode *expr) {
-  expr->accept(*this);
-}
+void IRGenerator::visit(const ExpressionNode *expr) { expr->accept(*this); }
 
-void IRGenerator::visit(const StatementNode *stmt) {
-  stmt->accept(*this);
-}
+void IRGenerator::visit(const StatementNode *stmt) { stmt->accept(*this); }
 
-void IRGenerator::visitExpressionStatementNode(const ExpressionStatementNode *node) {
+void IRGenerator::visitExpressionStatementNode(
+    const ExpressionStatementNode *node) {
   visit(node->expr);
 }
 
 void IRGenerator::visitDoubleNode(const DoubleNode *node) {
   lastValue = newTemp();
-  code.emplace_back(IROpcode::LOAD_CONST, lastValue, std::to_string(node->value));
+  code.emplace_back(IROpcode::LOAD_CONST, lastValue,
+                    std::to_string(node->value));
 }
 
 void IRGenerator::visitNumberNode(const NumberNode *node) {
   lastValue = newTemp();
-  code.emplace_back(IROpcode::LOAD_CONST, lastValue, std::to_string(node->value));
+  code.emplace_back(IROpcode::LOAD_CONST, lastValue,
+                    std::to_string(node->value));
 }
 
 void IRGenerator::visitStringNode(const StringNode *node) {
@@ -48,7 +58,8 @@ void IRGenerator::visitBinaryOpNode(const BinaryOpNode *node) {
   std::string rightVal = lastValue;
 
   lastValue = newTemp();
-  code.emplace_back(IROpcode::BINARY_OP, lastValue, leftVal, rightVal, node->op);
+  code.emplace_back(IROpcode::BINARY_OP, lastValue, leftVal, rightVal,
+                    node->op);
 }
 
 void IRGenerator::visitUnaryOpNode(const UnaryOpNode *node) {
@@ -84,7 +95,8 @@ void IRGenerator::visitIfNode(const IfNode *node) {
   visit(node->thenBlock);
   code.emplace_back(IROpcode::JUMP, "", endLabel);
   code.emplace_back(IROpcode::LABEL, elseLabel);
-  if (node->elseBlock) visit(node->elseBlock);
+  if (node->elseBlock)
+    visit(node->elseBlock);
   code.emplace_back(IROpcode::LABEL, endLabel);
 }
 
@@ -115,23 +127,30 @@ void IRGenerator::visitBlockNode(const BlockNode *node) {
 
 void IRGenerator::visitWhileNode(const WhileNode *node) {
   std::string startLabel = newLabel();
+  std::string stepLabel = newLabel();
   std::string endLabel = newLabel();
 
+  loopStack.push_back({startLabel, stepLabel, endLabel});
   code.emplace_back(IROpcode::LABEL, startLabel);
   visit(node->condition);
   code.emplace_back(IROpcode::JUMP_IF_FALSE, "", lastValue, endLabel);
   visit(node->block);
-  if (node->step) visit(node->step);
+  code.emplace_back(IROpcode::LABEL, stepLabel);
+  if (node->step)
+    visit(node->step);
   code.emplace_back(IROpcode::JUMP, "", startLabel);
   code.emplace_back(IROpcode::LABEL, endLabel);
+  loopStack.pop_back();
 }
 
-void IRGenerator::visitFunctionDeclarationNode(const FunctionDeclarationNode *node) {
+void IRGenerator::visitFunctionDeclarationNode(
+    const FunctionDeclarationNode *node) {
   visit(node->body);
 }
 
 void IRGenerator::visitFunctionCallNode(const FunctionCallNode *node) {
-  if (node->callee) visit(node->callee);
+  if (node->callee)
+    visit(node->callee);
 
   for (auto arg : node->arguments) {
     visit(arg);
@@ -140,9 +159,7 @@ void IRGenerator::visitFunctionCallNode(const FunctionCallNode *node) {
   code.emplace_back(IROpcode::CALL, lastValue, lastValue);
 }
 
-void IRGenerator::visitLambdaNode(const LambdaNode *node) {
-  visit(node->body);
-}
+void IRGenerator::visitLambdaNode(const LambdaNode *node) { visit(node->body); }
 
 void IRGenerator::visitReturnNode(const ReturnNode *node) {
   visit(node->val);
@@ -150,9 +167,9 @@ void IRGenerator::visitReturnNode(const ReturnNode *node) {
 }
 
 void IRGenerator::visitBreakNode(const BreakNode *node) {
-  return;
+  code.emplace_back(IROpcode::JUMP, "", loopStack.back().endLabel);
 }
 
 void IRGenerator::visitContinueNode(const ContinueNode *node) {
-  return;
+  code.emplace_back(IROpcode::JUMP, "", loopStack.back().stepLabel);
 }

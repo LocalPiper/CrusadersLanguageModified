@@ -27,11 +27,13 @@ class ContinueNode;
 
 class Visitor {
   std::string scopeType;
+
 public:
   virtual void visit(const ExpressionNode *expr);
   virtual void visit(const StatementNode *stmt);
 
-  virtual void visitExpressionStatementNode(const ExpressionStatementNode *node);
+  virtual void
+  visitExpressionStatementNode(const ExpressionStatementNode *node);
   virtual void visitDoubleNode(const DoubleNode *node);
   virtual void visitNumberNode(const NumberNode *node);
   virtual void visitStringNode(const StringNode *node);
@@ -45,11 +47,12 @@ public:
   virtual void visitTernaryIfNode(const TernaryIfNode *node);
   virtual void visitBlockNode(const BlockNode *node);
   virtual void visitWhileNode(const WhileNode *node);
-  virtual void visitFunctionDeclarationNode(const FunctionDeclarationNode *node);
+  virtual void
+  visitFunctionDeclarationNode(const FunctionDeclarationNode *node);
   virtual void visitFunctionCallNode(const FunctionCallNode *node);
   virtual void visitLambdaNode(const LambdaNode *node);
   virtual void visitReturnNode(const ReturnNode *node);
   virtual void visitBreakNode(const BreakNode *node);
   virtual void visitContinueNode(const ContinueNode *node);
-}; 
-#endif // SEMANTIC_HPP 
+};
+#endif // SEMANTIC_HPP

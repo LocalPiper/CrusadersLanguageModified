@@ -5,7 +5,7 @@
 using namespace std;
 
 bool checkScope(const char c, std::string &scopeType) {
-  for (auto it = scopeType.rbegin(); it != scopeType.rend(); --it) {
+  for (auto it = scopeType.rbegin(); it != scopeType.rend(); ++it) {
     if ((*it) == c)
       return true;
   }

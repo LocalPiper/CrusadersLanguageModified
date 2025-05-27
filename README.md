@@ -190,6 +190,10 @@ arguments ::= expression
             | ε
 
 lambda ::= LAMBDA OP arguments CP block
+         | LAMBDA OP arguments CP OB return_statement CB
+         | LAMBDA OP arguments CP OB print_statement CB
+         | LAMBDA OP arguments CP OB expression_statement CB
+
 
 ```
 
@@ -227,8 +231,8 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | #️⃣ | Feature Name                  | Description                                                                                                                        | Priority     | Status            |
 | --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------- |
 | 1   | Semantic Analysis            | Detect illegal constructs not caught by parser (e.g., `break` outside loop, `return` outside function, invalid closure usage)      | ⚙️ Mandatory | 🛠️ IN PROGRESS |
-| 2   | IR Format Decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
-| 3   | IR Generator                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 2   | IR Format Decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ✅ DONE |
+| 3   | IR Generator                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | 🛠️ IN PROGRESS |
 | 4   | Constant Folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
 | 5   | Dead Code Elimination        | (Optional) Remove unreachable code for minimal optimization                                                                        | ✨ Additional | ❌ NOT IMPLEMENTED |
 | 6   | Liveness Analysis            | (Optional) Used to optimize register allocation later                                                                              | ✨ Additional | ❌ NOT IMPLEMENTED |

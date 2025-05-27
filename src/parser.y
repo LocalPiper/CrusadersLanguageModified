@@ -10,6 +10,7 @@
 #include "semantic.hpp"
 #include "ir.hpp"
 #include "ir_struct.hpp"
+#include "optimizer.hpp"
 
 extern int yylineno;
 extern char* yytext;
@@ -336,10 +337,14 @@ lambda:
 
 int main(int argc, char* argv[]) {
   bool irFlag = false;
+  bool optFlag = false;
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
     if (arg == "-s") {
       irFlag = true;
+    }
+    if (arg == "-O") {
+      optFlag = true;
     }
   }
   if (yyparse() == 0 && root && is_good) {
@@ -354,6 +359,9 @@ int main(int argc, char* argv[]) {
         IRGenerator irg;
         dynamic_cast<StatementNode*>(root)->accept(irg);
         irg.emitDeferredFunctions();
+        if (optFlag) {
+          irg.code = optimize(irg.code);
+        }
         printIR(irg.code);
       }
     } catch (const std::runtime_error &exc) {

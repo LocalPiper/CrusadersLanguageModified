@@ -16,7 +16,11 @@ enum class IROpcode {
   JUMP_IF_FALSE,
   LABEL,
   CALL,
-  RETURN
+  RETURN,
+
+  FUNC_BEGIN,
+  FUNC_END,
+  MAKE_FUNC
 };
 
 struct IRInstruction {
@@ -30,6 +34,12 @@ struct IRInstruction {
                 std::string a2 = "", std::string opStr = "")
       : opcode(op_), result(std::move(res)), arg1(std::move(a1)),
         arg2(std::move(a2)), op(std::move(opStr)) {}
+};
+
+struct CallMetadata {
+  std::string callResult;
+  std::string callee;
+  std::vector<std::string> argumentTemps;
 };
 
 using IR = std::vector<IRInstruction>;
@@ -69,6 +79,15 @@ inline void printIR(const IR &ir) {
       break;
     case IROpcode::RETURN:
       std::cout << "return " << instr.arg1 << "\n";
+      break;
+    case IROpcode::FUNC_BEGIN:
+      std::cout << "# begin func " << instr.result << "\n";
+      break;
+    case IROpcode::FUNC_END:
+      std::cout << "# end func " << instr.result << "\n";
+      break;
+    case IROpcode::MAKE_FUNC:
+      std::cout << instr.result << " = function " << instr.arg1 << "\n";
       break;
     }
   }

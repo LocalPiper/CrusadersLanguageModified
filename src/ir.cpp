@@ -2,6 +2,7 @@
 #include "ast.hpp"
 #include "ir_struct.hpp"
 #include <string>
+#include <utility>
 #include <vector>
 
 struct LoopContext {
@@ -18,6 +19,10 @@ std::string IRGenerator::newTemp() {
 
 std::string IRGenerator::newLabel() {
   return "L" + std::to_string(labelCounter++);
+}
+
+std::string IRGenerator::newFunc() {
+  return "fn_" + std::to_string(funcCounter++);
 }
 
 void IRGenerator::visit(const ExpressionNode *expr) { expr->accept(*this); }
@@ -145,21 +150,46 @@ void IRGenerator::visitWhileNode(const WhileNode *node) {
 
 void IRGenerator::visitFunctionDeclarationNode(
     const FunctionDeclarationNode *node) {
-  visit(node->body);
+  std::string funcLabel = newFunc();
+  deferredFunctions.emplace_back(funcLabel, node->body);
+
+  std::string temp = newTemp();
+  code.emplace_back(IROpcode::MAKE_FUNC, temp, funcLabel);
+  code.emplace_back(IROpcode::STORE_VAR, "", node->name, temp);
 }
 
 void IRGenerator::visitFunctionCallNode(const FunctionCallNode *node) {
-  if (node->callee)
+  std::string calleeTemp;
+  if (node->callee) {
     visit(node->callee);
+    calleeTemp = lastValue;
+  } else {
+    calleeTemp = newTemp();
+    code.emplace_back(IROpcode::LOAD_VAR, calleeTemp, node->name);
+  }
 
+  std::vector<std::string> argTemps;
   for (auto arg : node->arguments) {
     visit(arg);
+    argTemps.push_back(lastValue);
   }
-  lastValue = newTemp();
-  code.emplace_back(IROpcode::CALL, lastValue, lastValue);
+
+  std::string callTemp = newTemp();
+  code.emplace_back(IROpcode::CALL, callTemp, calleeTemp);
+  lastValue = callTemp;
+
+  callMetadata.push_back(CallMetadata{
+      .callResult = callTemp, .callee = calleeTemp, .argumentTemps = argTemps});
 }
 
-void IRGenerator::visitLambdaNode(const LambdaNode *node) { visit(node->body); }
+void IRGenerator::visitLambdaNode(const LambdaNode *node) {
+  std::string funcLabel = newFunc();
+  deferredFunctions.emplace_back(funcLabel, node->body);
+
+  std::string temp = newTemp();
+  code.emplace_back(IROpcode::MAKE_FUNC, temp, funcLabel);
+  lastValue = temp;
+}
 
 void IRGenerator::visitReturnNode(const ReturnNode *node) {
   visit(node->val);
@@ -172,4 +202,25 @@ void IRGenerator::visitBreakNode(const BreakNode *node) {
 
 void IRGenerator::visitContinueNode(const ContinueNode *node) {
   code.emplace_back(IROpcode::JUMP, "", loopStack.back().stepLabel);
+}
+
+void IRGenerator::emitDeferredFunctions() {
+  std::vector<std::pair<std::string, const BlockNode *>> queue =
+      deferredFunctions;
+  deferredFunctions.clear();
+
+  while (!queue.empty()) {
+    auto [label, body] = queue.back();
+    queue.pop_back();
+
+    code.emplace_back(IROpcode::FUNC_BEGIN, label);
+    visit(body);
+    code.emplace_back(IROpcode::RETURN, "", "0");
+    code.emplace_back(IROpcode::FUNC_END, label);
+
+    for (auto &f : deferredFunctions) {
+      queue.push_back(f);
+    }
+    deferredFunctions.clear();
+  }
 }

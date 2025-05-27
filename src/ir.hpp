@@ -2,6 +2,7 @@
 #define IR_HPP
 #include "ir_struct.hpp"
 #include "semantic.hpp"
+#include <vector>
 
 class ExpressionNode;
 class StatementNode;
@@ -31,10 +32,14 @@ public:
   IR code;
   int tempCounter = 0;
   int labelCounter = 0;
+  int funcCounter = 0;
+  std::vector<std::pair<std::string, const BlockNode *>> deferredFunctions;
+  std::vector<CallMetadata> callMetadata;
   std::string lastValue;
 
   std::string newTemp();
   std::string newLabel();
+  std::string newFunc();
 
   void visit(const ExpressionNode *expr) override;
   void visit(const StatementNode *stmt) override;
@@ -61,6 +66,8 @@ public:
   void visitReturnNode(const ReturnNode *node) override;
   void visitBreakNode(const BreakNode *node) override;
   void visitContinueNode(const ContinueNode *node) override;
+
+  void emitDeferredFunctions();
 };
 
 #endif // IR_HPP

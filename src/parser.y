@@ -353,6 +353,7 @@ int main(int argc, char* argv[]) {
       } else {
         IRGenerator irg;
         dynamic_cast<StatementNode*>(root)->accept(irg);
+        irg.emitDeferredFunctions();
         printIR(irg.code);
       }
     } catch (const std::runtime_error &exc) {

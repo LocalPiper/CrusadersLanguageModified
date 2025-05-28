@@ -2,9 +2,11 @@
 #include "ir_struct.hpp"
 #include "operations.hpp"
 #include "value.hpp"
+#include <algorithm>
 #include <regex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <variant>
 
 IR constantFold(const IR &code) {
@@ -97,7 +99,55 @@ IR constantFold(const IR &code) {
   return output;
 }
 
+IR deadCodeElim(const IR &code) {
+  std::unordered_set<std::string> live;
+  IR output;
+
+  auto hasSideEffect = [](const IRInstruction &instr) -> bool {
+    switch (instr.opcode) {
+    case IROpcode::PRINT:
+    case IROpcode::CALL:
+    case IROpcode::RETURN:
+    case IROpcode::JUMP:
+    case IROpcode::JUMP_IF_FALSE:
+    case IROpcode::LABEL:
+    case IROpcode::FUNC_BEGIN:
+    case IROpcode::FUNC_END:
+    case IROpcode::MAKE_FUNC:
+      return true;
+    default:
+      return false;
+    }
+  };
+
+  for (auto it = code.rbegin(); it != code.rend(); ++it) {
+    const IRInstruction &instr = *it;
+
+    if (instr.opcode == IROpcode::STORE_VAR) {
+      if (live.count(instr.arg1)) {
+        if (!instr.arg2.empty())
+          live.insert(instr.arg2);
+        output.push_back(instr);
+      }
+      continue;
+    }
+
+    bool isLive = !instr.result.empty() && live.count(instr.result);
+    if (isLive || hasSideEffect(instr)) {
+      if (!instr.arg1.empty())
+        live.insert(instr.arg1);
+      if (!instr.arg2.empty())
+        live.insert(instr.arg2);
+      output.push_back(instr);
+    }
+  }
+
+  std::reverse(output.begin(), output.end());
+  return output;
+}
+
 IR optimize(IR code) {
   code = constantFold(code);
+  code = deadCodeElim(code);
   return code;
 }

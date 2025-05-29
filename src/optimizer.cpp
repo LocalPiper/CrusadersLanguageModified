@@ -40,7 +40,8 @@ std::string valueToString(const Value &val) {
   } else if (std::holds_alternative<double>(val)) {
     return std::to_string(std::get<double>(val));
   } else {
-    return std::get<std::string>(val);
+    const auto &s = std::get<std::string>(val);
+    return "\"" + s + "\"";
   }
 }
 
@@ -77,11 +78,14 @@ void copyPropagation(std::vector<BasicBlock *> &cfg) {
       switch (instr.opcode) {
       case IROpcode::LOAD_VAR:
       case IROpcode::LOAD_CONST:
-      case IROpcode::LOAD_STRING:
       case IROpcode::CALL:
       case IROpcode::MAKE_FUNC:
         instr.arg1 = resolve(instr.arg1);
         copies[instr.result] = instr.arg1;
+        break;
+      case IROpcode::LOAD_STRING:
+        instr.arg1 = resolve(instr.arg1);
+        copies[instr.result] = "\"" + instr.arg1 + "\"";
         break;
       case IROpcode::STORE_VAR: {
         std::string resolved = resolve(instr.arg2);
@@ -252,7 +256,6 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
         if (!instr.arg2.empty())
           ud.use.insert(instr.arg2);
       } else {
-        // normal uses
         if (!instr.arg1.empty())
           ud.use.insert(instr.arg1);
         if (!instr.arg2.empty())

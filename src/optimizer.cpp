@@ -4,61 +4,13 @@
 #include "operations.hpp"
 #include "value.hpp"
 #include <algorithm>
-#include <iostream>
 #include <optional>
-#include <ostream>
 #include <regex>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <variant>
 #include <vector>
-
-std::optional<Value> parseLiteral(const std::string &raw) {
-  try {
-    if (std::regex_match(raw, std::regex(R"(^-?\d+$)"))) {
-      return std::stoi(raw);
-    }
-
-    if (std::regex_match(raw, std::regex(R"(^-?\d*\.\d+(f?)$)"))) {
-      return std::stod(raw);
-    }
-
-    if (!raw.empty() && raw.front() == '"' && raw.back() == '"') {
-      return raw.substr(1, raw.size() - 2);
-    }
-
-    return std::nullopt;
-  } catch (...) {
-    return std::nullopt;
-  }
-}
-
-std::string valueToString(const Value &val) {
-  if (std::holds_alternative<int>(val)) {
-    return std::to_string(std::get<int>(val));
-  } else if (std::holds_alternative<double>(val)) {
-    return std::to_string(std::get<double>(val));
-  } else {
-    const auto &s = std::get<std::string>(val);
-    return "\"" + s + "\"";
-  }
-}
-
-static bool hasSideEffect(const IRInstruction &instr) {
-  switch (instr.opcode) {
-  case IROpcode::PRINT:
-  case IROpcode::CALL:
-  case IROpcode::RETURN:
-  case IROpcode::JUMP:
-  case IROpcode::JUMP_IF_FALSE:
-  case IROpcode::LABEL:
-  case IROpcode::MAKE_FUNC:
-    return true;
-  default:
-    return false;
-  }
-}
 
 void copyPropagation(std::vector<BasicBlock *> &cfg) {
   std::unordered_map<std::string, std::string> globalCopies;
@@ -87,12 +39,10 @@ void copyPropagation(std::vector<BasicBlock *> &cfg) {
         instr.arg1 = resolve(instr.arg1);
         copies[instr.result] = "\"" + instr.arg1 + "\"";
         break;
-      case IROpcode::STORE_VAR: {
-        std::string resolved = resolve(instr.arg2);
-        instr.arg2 = resolved;
-        copies[instr.arg1] = resolved;
+      case IROpcode::STORE_VAR:
+        instr.arg2 = resolve(instr.arg2);
+        copies[instr.arg1] = instr.arg2;
         break;
-      }
       case IROpcode::UNARY_OP:
         instr.arg1 = resolve(instr.arg1);
         break;
@@ -124,13 +74,22 @@ void constantFold(const std::vector<BasicBlock *> &cfg) {
       return std::stoi(raw);
     if (std::regex_match(raw, std::regex(R"(^-?\d*\.\d+f?$)")))
       return std::stod(raw);
+    if (!raw.empty() && raw.front() == '"' && raw.back() == '"')
+      return raw.substr(1, raw.size() - 2);
     return std::nullopt;
+  };
+
+  auto valueToString = [](const Value &val) -> std::string {
+    if (std::holds_alternative<int>(val))
+      return std::to_string(std::get<int>(val));
+    if (std::holds_alternative<double>(val))
+      return std::to_string(std::get<double>(val));
+    return "\"" + std::get<std::string>(val) + "\"";
   };
 
   auto intersectConsts = [](const std::vector<ConstMap> &consts) -> ConstMap {
     if (consts.empty())
       return {};
-
     ConstMap result = consts.front();
     for (size_t i = 1; i < consts.size(); ++i) {
       for (auto it = result.begin(); it != result.end();) {
@@ -169,12 +128,14 @@ void constantFold(const std::vector<BasicBlock *> &cfg) {
       };
 
       switch (instr.opcode) {
-      case IROpcode::LOAD_CONST: {
-        auto parsed = parseLiteral(instr.arg1);
-        out[instr.result] = parsed ? *parsed : Value(instr.arg1);
+      case IROpcode::LOAD_CONST:
+        if (auto parsed = parseLiteral(instr.arg1)) {
+          out[instr.result] = *parsed;
+        } else {
+          out[instr.result] = instr.arg1;
+        }
         break;
-      }
-      case IROpcode::LOAD_VAR: {
+      case IROpcode::LOAD_VAR:
         if (out.count(instr.arg1)) {
           instr.opcode = IROpcode::LOAD_CONST;
           instr.arg1 = valueToString(out[instr.arg1]);
@@ -182,19 +143,16 @@ void constantFold(const std::vector<BasicBlock *> &cfg) {
           out.erase(instr.result);
         }
         break;
-      }
-      case IROpcode::STORE_VAR: {
+      case IROpcode::STORE_VAR:
         if (out.count(instr.arg2)) {
           out[instr.arg1] = out[instr.arg2];
         } else {
           out.erase(instr.arg1);
         }
         break;
-      }
-      case IROpcode::BINARY_OP: {
-        auto lhs = getVal(instr.arg1);
-        auto rhs = getVal(instr.arg2);
-        if (lhs && rhs) {
+      case IROpcode::BINARY_OP:
+        if (auto lhs = getVal(instr.arg1), rhs = getVal(instr.arg2);
+            lhs && rhs) {
           Value res;
           if (instr.op == "&&") {
             res = isTruthy(*lhs) ? *rhs : *lhs;
@@ -212,10 +170,8 @@ void constantFold(const std::vector<BasicBlock *> &cfg) {
           out.erase(instr.result);
         }
         break;
-      }
-      case IROpcode::UNARY_OP: {
-        auto rhs = getVal(instr.arg1);
-        if (rhs) {
+      case IROpcode::UNARY_OP:
+        if (auto rhs = getVal(instr.arg1)) {
           Value res = applyUnaryOp(instr.op, *rhs);
           instr.opcode = IROpcode::LOAD_CONST;
           instr.arg1 = valueToString(res);
@@ -225,7 +181,6 @@ void constantFold(const std::vector<BasicBlock *> &cfg) {
           out.erase(instr.result);
         }
         break;
-      }
       default:
         if (!instr.result.empty())
           out.erase(instr.result);
@@ -248,6 +203,22 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
     StrSet use, def;
   };
   std::unordered_map<BasicBlock *, UD> B;
+
+  auto hasSideEffect = [](const IRInstruction &instr) {
+    switch (instr.opcode) {
+    case IROpcode::PRINT:
+    case IROpcode::CALL:
+    case IROpcode::RETURN:
+    case IROpcode::JUMP:
+    case IROpcode::JUMP_IF_FALSE:
+    case IROpcode::LABEL:
+    case IROpcode::MAKE_FUNC:
+      return true;
+    default:
+      return false;
+    }
+  };
+
   for (auto *block : cfg) {
     UD &ud = B[block];
     for (auto &instr : block->instructions) {
@@ -268,6 +239,7 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
 
   std::unordered_map<BasicBlock *, StrSet> liveIn, liveOut;
   bool changed = true;
+
   while (changed) {
     changed = false;
     for (auto it = cfg.rbegin(); it != cfg.rend(); ++it) {
@@ -275,6 +247,7 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
       StrSet newOut;
       for (BasicBlock *s : block->succ)
         newOut.insert(liveIn[s].begin(), liveIn[s].end());
+
       StrSet newIn = B[block].use;
       for (auto &v : newOut)
         if (!B[block].def.count(v))
@@ -291,6 +264,7 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
   for (auto *block : cfg) {
     StrSet live = liveOut[block];
     IR newInstrs;
+
     for (auto it = block->instructions.rbegin();
          it != block->instructions.rend(); ++it) {
       IRInstruction &instr = *it;
@@ -302,7 +276,6 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
           live.insert(instr.arg1);
         if (!instr.arg2.empty())
           live.insert(instr.arg2);
-
       } else if (instr.opcode == IROpcode::STORE_VAR) {
         if (live.count(instr.arg1)) {
           keep = true;
@@ -310,7 +283,6 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
             live.insert(instr.arg2);
         }
         live.erase(instr.arg1);
-
       } else if (!instr.result.empty()) {
         if (live.count(instr.result)) {
           keep = true;
@@ -335,12 +307,7 @@ IR optimize(IR code) {
   std::vector<BasicBlock *> cfg = buildCFG(code);
 
   copyPropagation(cfg);
-  std::cout << "after CP: " << std::endl;
-  printIR(flattenCFG(cfg));
   constantFold(cfg);
-  std::cout << "\nafter CF: " << std::endl;
-  printIR(flattenCFG(cfg));
   deadCodeElimination(cfg);
-  std::cout << "\nafter DCE: " << std::endl;
   return flattenCFG(cfg);
 }

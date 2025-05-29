@@ -20,7 +20,8 @@ SRC_FILES = $(SRC_DIR)/ast.cpp \
             $(SRC_DIR)/builtin.cpp \
 						$(SRC_DIR)/semantic.cpp \
 						$(SRC_DIR)/ir.cpp \
-						$(SRC_DIR)/optimizer.cpp
+						$(SRC_DIR)/optimizer.cpp \
+						$(SRC_DIR)/cfg.cpp
 
 HDR_FILES = $(SRC_DIR)/ast.hpp \
 						$(SRC_DIR)/operations.hpp \
@@ -33,7 +34,8 @@ HDR_FILES = $(SRC_DIR)/ast.hpp \
 						$(SRC_DIR)/semantic.hpp \
 						$(SRC_DIR)/ir.hpp \
 						$(SRC_DIR)/ir_struct.hpp \
-						$(SRC_DIR)/optimizer.hpp
+						$(SRC_DIR)/optimizer.hpp \
+						$(SRC_DIR)/cfg.hpp
 
 all: $(BIN_DIR)/clm
 

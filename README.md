@@ -11,6 +11,7 @@ This project includes a full toolchain:
 - Abstract Syntax Tree (AST)
 - Semantic analyzer
 - IR generator
+- (WIP) Optimizer
 - (WIP) ASM codegen
 
 ---
@@ -231,10 +232,10 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 
 | #️⃣ | Feature Name                  | Description                                                                                                                        | Priority     | Status            |
 | --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------- |
-| 1   | Analyzer: semantic analysis            | Detect illegal constructs not caught by parser (e.g., `break` and `continue` outside loop, `return` outside function, functions inside loops)      | ⚙️ Mandatory | 🛠️ IN PROGRESS |
+| 1   | Analyzer: semantic analysis            | Detect illegal constructs not caught by parser (e.g., `break` and `continue` outside loop, `return` outside function, functions inside loops)      | ⚙️ Mandatory | ✅ DONE |
 | 2   | IR generator: IR format decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ✅ DONE (TAC chosen) |
 | 3   | IR generator: implementation                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | ✅ DONE |
-| 4   | Optimizer: constant folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | 🛠️ IN PROGRESS |
+| 4   | Optimizer: constant folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ✅ DONE |
 | 5   | Optimizer: dead code elimination        | Remove unreachable code for minimal optimization                                                                        | ✨ Additional | 🛠️ IN PROGRESS |
 | 6   | Optimizer: copy propagation        | Inline variables where needed   | ✨ Additional | 🛠️ IN PROGRESS |
 | 7   | ASM generator: implementation           | Convert optimized IR into RISCV32 ASM for emulation  | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |

@@ -14,7 +14,8 @@ std::vector<BasicBlock *> buildBasicBlocks(const IR &code) {
   for (size_t i = 0; i < code.size(); ++i) {
     const auto &instr = code[i];
 
-    if (instr.opcode == IROpcode::LABEL) {
+    if (instr.opcode == IROpcode::LABEL ||
+        instr.opcode == IROpcode::FUNC_BEGIN) {
       current = new BasicBlock();
       current->name = instr.result;
       labelToBlock[instr.result] = current;
@@ -25,7 +26,7 @@ std::vector<BasicBlock *> buildBasicBlocks(const IR &code) {
 
     if (instr.opcode == IROpcode::JUMP ||
         instr.opcode == IROpcode::JUMP_IF_FALSE ||
-        instr.opcode == IROpcode::RETURN) {
+        instr.opcode == IROpcode::FUNC_END) {
       current = new BasicBlock();
       current->name = "block_" + std::to_string(i);
       blocks.push_back(current);
@@ -77,7 +78,8 @@ std::vector<BasicBlock *> buildCFG(const IR &code) {
   for (auto *block : blocks) {
     if (!block->instructions.empty()) {
       const auto &instr = block->instructions.front();
-      if (instr.opcode == IROpcode::LABEL) {
+      if (instr.opcode == IROpcode::LABEL ||
+          instr.opcode == IROpcode::FUNC_BEGIN) {
         labelToBlock[instr.result] = block;
       }
     }

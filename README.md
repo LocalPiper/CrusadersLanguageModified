@@ -11,7 +11,7 @@ This project includes a full toolchain:
 - Abstract Syntax Tree (AST)
 - Semantic analyzer
 - IR generator
-- (WIP) Optimizer
+- Optimizer
 - (WIP) ASM codegen
 
 ---
@@ -236,9 +236,9 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 2   | IR generator: IR format decision           | Choose an IR (e.g., custom, SSA, 3-address code) that is easy to generate from AST and suitable for optimization + ASM translation | ⚙️ Mandatory | ✅ DONE (TAC chosen) |
 | 3   | IR generator: implementation                 | Transform AST into chosen IR                                                                                                       | ⚙️ Mandatory | ✅ DONE |
 | 4   | Optimizer: constant folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ✅ DONE |
-| 5   | Optimizer: dead code elimination        | Remove unreachable code for minimal optimization                                                                        | ✨ Additional | 🛠️ IN PROGRESS |
-| 6   | Optimizer: copy propagation        | Inline variables where needed   | ✨ Additional | 🛠️ IN PROGRESS |
-| 7   | ASM generator: implementation           | Convert optimized IR into RISCV32 ASM for emulation  | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
+| 5   | Optimizer: dead code elimination        | Remove unreachable code for minimal optimization                                                                        | ✨ Additional | ✅ DONE |
+| 6   | Optimizer: copy propagation        | Inline variables where needed   | ✨ Additional | ✅ DONE |
+| 7   | ASM generator: implementation           | Convert optimized IR into RISCV32 ASM for emulation  | ⚙️ Mandatory | 🛠️ IN PROGRESS |
 | 8   | ASM generator: builtin support           | Find a way to call builtin functions like `array`, `generate_array` and `size`  | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
 | 9   | Optimizer: jump simplification        | Remove redundant jumps. Implement when other work is done | ✨ Additional | ❌ NOT IMPLEMENTED |
 | 10  | Optimizer: common subexpression elimination        | Allow expression hashing to avoid recomputation. Implement when other work is done | ✨ Additional | ❌ NOT IMPLEMENTED |

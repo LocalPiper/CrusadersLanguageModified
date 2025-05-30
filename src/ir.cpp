@@ -1,6 +1,7 @@
 #include "ir.hpp"
 #include "ast.hpp"
 #include "ir_struct.hpp"
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -93,16 +94,20 @@ void IRGenerator::visitCreationNode(const CreationNode *node) {
 void IRGenerator::visitIfNode(const IfNode *node) {
   visit(node->condition);
   std::string condVal = lastValue;
-  std::string elseLabel = newLabel();
   std::string endLabel = newLabel();
-
-  code.emplace_back(IROpcode::JUMP_IF_FALSE, "", condVal, elseLabel);
-  visit(node->thenBlock);
-  code.emplace_back(IROpcode::JUMP, "", endLabel);
-  code.emplace_back(IROpcode::LABEL, elseLabel);
-  if (node->elseBlock)
+  if (node->elseBlock) {
+    std::string elseLabel = newLabel();
+    code.emplace_back(IROpcode::JUMP_IF_FALSE, "", condVal, elseLabel);
+    visit(node->thenBlock);
+    code.emplace_back(IROpcode::JUMP, "", endLabel);
+    code.emplace_back(IROpcode::LABEL, elseLabel);
     visit(node->elseBlock);
-  code.emplace_back(IROpcode::LABEL, endLabel);
+    code.emplace_back(IROpcode::LABEL, endLabel);
+  } else {
+    code.emplace_back(IROpcode::JUMP_IF_FALSE, "", condVal, endLabel);
+    visit(node->thenBlock);
+    code.emplace_back(IROpcode::LABEL, endLabel);
+  }
 }
 
 void IRGenerator::visitTernaryIfNode(const TernaryIfNode *node) {
@@ -222,5 +227,48 @@ void IRGenerator::emitDeferredFunctions() {
       queue.push_back(f);
     }
     deferredFunctions.clear();
+  }
+}
+
+void IRGenerator::debugIR() {
+  auto opcodeToText = [](const IROpcode opcode) {
+    switch (opcode) {
+    case IROpcode::CALL:
+      return "CALL";
+    case IROpcode::JUMP:
+      return "JUMP";
+    case IROpcode::LABEL:
+      return "LABEL";
+    case IROpcode::PRINT:
+      return "PRINT";
+    case IROpcode::RETURN:
+      return "RETURN";
+    case IROpcode::FUNC_BEGIN:
+      return "FUNC_BEGIN";
+    case IROpcode::FUNC_END:
+      return "FUNC_END";
+    case IROpcode::LOAD_VAR:
+      return "LOAD_VAR";
+    case IROpcode::LOAD_CONST:
+      return "LOAD_CONST";
+    case IROpcode::LOAD_STRING:
+      return "LOAD_STRING";
+    case IROpcode::STORE_VAR:
+      return "STORE_VAR";
+    case IROpcode::BINARY_OP:
+      return "BINARY_OP";
+    case IROpcode::UNARY_OP:
+      return "UNARY_OP";
+    case IROpcode::MAKE_FUNC:
+      return "MAKE_FUNC";
+    case IROpcode::JUMP_IF_FALSE:
+      return "JUMP_IF_FALSE";
+    }
+    return "";
+  };
+  for (auto instr : code) {
+    std::cout << opcodeToText(instr.opcode) << " " << instr.result << " "
+              << instr.arg1 << " " << instr.arg2 << " " << instr.op
+              << std::endl;
   }
 }

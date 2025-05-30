@@ -11,6 +11,7 @@
 #include "ir.hpp"
 #include "ir_struct.hpp"
 #include "optimizer.hpp"
+#include "codegen.hpp"
 
 extern int yylineno;
 extern char* yytext;
@@ -377,6 +378,9 @@ int main(int argc, char* argv[]) {
           irg.code = optimize(irg.code);
         }
         printIR(irg.code);
+        std::cout << "\n";
+        irg.debugIR();
+        writeAsm(irg.code);
       }
     } catch (const std::runtime_error &exc) {
       cerr << exc.what() << endl;

@@ -68,6 +68,7 @@ public:
   void visitContinueNode(const ContinueNode *node) override;
 
   void emitDeferredFunctions();
+  void debugIR();
 };
 
 #endif // IR_HPP

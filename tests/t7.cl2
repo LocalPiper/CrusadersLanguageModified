@@ -1,4 +1,4 @@
-proclaim invoke 1 amass 2 also 3 dismiss 
+proclaim 1 amass 2
 
 inscribe sum invoke a also b dismiss commence
   proclaim a amass b
@@ -16,3 +16,11 @@ upon invoke henceforth j bestow 0 also j nobelow 1 also j bestow j amass 1 dismi
   conclude
   f invoke dismiss
 conclude
+
+inscribe warcrime invoke x also y dismiss commence
+    proclaim x amass y
+    proclaim x nobelow y
+    proclaim x bestow y
+conclude
+
+warcrime invoke 3 also 4 dismiss

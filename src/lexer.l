@@ -18,6 +18,8 @@ extern char* last_good_text;
 
 %}
 
+%x COMMENT
+
 %%
 
 [0-9]+\.[0-9]+ { UPDATE_GOOD_TOKEN(); yylval.dnum = atof(yytext); return DOUBLE; }
@@ -63,7 +65,15 @@ extern char* last_good_text;
 [a-zA-Z_][a-zA-Z_0-9]* { UPDATE_GOOD_TOKEN(); yylval.str = strdup(yytext); return IDENTIFIER; }
 \"[^\"]*\"  { UPDATE_GOOD_TOKEN(); yylval.str = strdup(yytext + 1); yylval.str[strlen(yylval.str) - 1] = '\0'; return STRING; }
 "//".*        { UPDATE_GOOD_TOKEN(); /* skip single-line comment */ }
-"/*"([^*]|\*+[^*/])*\*+\/    { /* skip multi-line comment */ }
+
+"/*" { UPDATE_GOOD_TOKEN(); BEGIN(COMMENT); }
+
+<COMMENT>{
+    "*/"       { BEGIN(INITIAL); }
+    \n         { ++yylineno; }
+    .          { /* skip */ }
+}
+
 .           { UPDATE_GOOD_TOKEN(); return yytext[0]; }
 
 %%

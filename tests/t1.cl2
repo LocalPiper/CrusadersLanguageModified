@@ -7,7 +7,7 @@ Duck duck duck
 ububsibubneka
 proclaim 69
 */
-henceforth result bestow x amass y 
+hencefort h result bestow x amass y 
 proclaim result /* milord 
 proclaimeth */
 

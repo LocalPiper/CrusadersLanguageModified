@@ -12,3 +12,5 @@ inscribe factorial invoke x dismiss commence
         yield x conjure factorial invoke x sacrifice 1 dismiss
     conclude
 conclude
+
+proclaim factorial invoke 11 dismiss

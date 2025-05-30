@@ -14,17 +14,28 @@ PARSER_CPP_OUT = $(BUILD_DIR)/parser.tab.cpp
 PARSER_HPP_OUT = $(BUILD_DIR)/parser.tab.hpp
 
 SRC_FILES = $(SRC_DIR)/ast.cpp \
+						$(SRC_DIR)/operations.cpp \
             $(SRC_DIR)/function.cpp \
             $(SRC_DIR)/environment.cpp \
-            $(SRC_DIR)/builtin.cpp
+            $(SRC_DIR)/builtin.cpp \
+						$(SRC_DIR)/semantic.cpp \
+						$(SRC_DIR)/ir.cpp \
+						$(SRC_DIR)/optimizer.cpp \
+						$(SRC_DIR)/cfg.cpp
 
 HDR_FILES = $(SRC_DIR)/ast.hpp \
+						$(SRC_DIR)/operations.hpp \
             $(SRC_DIR)/function.hpp \
             $(SRC_DIR)/environment.hpp \
             $(SRC_DIR)/builtin.hpp \
             $(SRC_DIR)/callable.hpp \
             $(SRC_DIR)/array.hpp \
-            $(SRC_DIR)/value.hpp
+            $(SRC_DIR)/value.hpp \
+						$(SRC_DIR)/semantic.hpp \
+						$(SRC_DIR)/ir.hpp \
+						$(SRC_DIR)/ir_struct.hpp \
+						$(SRC_DIR)/optimizer.hpp \
+						$(SRC_DIR)/cfg.hpp
 
 all: $(BIN_DIR)/clm
 

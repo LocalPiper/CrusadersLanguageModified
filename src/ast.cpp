@@ -3,7 +3,8 @@
 #include "callable.hpp"
 #include "environment.hpp"
 #include "function.hpp"
-#include <algorithm>
+#include "operations.hpp"
+#include "semantic.hpp"
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -11,155 +12,7 @@
 #include <variant>
 #include <vector>
 
-using namespace std;
-
-enum class TypeRank { INT = 1, DOUBLE = 2, STRING = 3 };
-
-TypeRank getTypeRank(const Value &val) {
-  if (holds_alternative<int>(val))
-    return TypeRank::INT;
-  if (holds_alternative<double>(val))
-    return TypeRank::DOUBLE;
-  if (holds_alternative<string>(val))
-    return TypeRank::STRING;
-  throw runtime_error("Unknown type in Value");
-}
-
-// type promotion
-// we assume these rules
-// TYPE A     TYPE B     RESULT
-// int        int        int
-// int        double     double
-// double     double     double
-// int        string     string
-// double     string     string
-// string     string     string
-//
-// so as we can see, RESULT = MAX(TYPE A, TYPE B)
-TypeRank promote(const Value &a, const Value &b) {
-  return max(getTypeRank(a), getTypeRank(b));
-}
-
-bool isTruthy(const Value &val) {
-  if (holds_alternative<int>(val))
-    return get<int>(val) != 0;
-  if (holds_alternative<double>(val))
-    return get<double>(val) != 0; // this is not good, i should probably test it
-  if (holds_alternative<string>(val))
-    return !get<string>(val).empty();
-  return false;
-}
-
 Value VariableNode::evaluate() const { return getVar(name); }
-
-bool isValidOperation(const string &op, TypeRank type) {
-  switch (type) {
-  case TypeRank::INT:
-    return op == "+" || op == "-" || op == "*" || op == "/" || op == "%" ||
-           op == "==" || op == "!=" || op == "<" || op == ">" || op == "<=" ||
-           op == ">=";
-  case TypeRank::DOUBLE:
-    return op == "+" || op == "-" || op == "*" || op == "/" || op == "==" ||
-           op == "!=" || op == "<" || op == ">" || op == "<=" || op == ">=";
-  case TypeRank::STRING:
-    return op == "+" || op == "==" || op == "!=";
-  default:
-    return false;
-  }
-}
-
-Value applyBinaryOp(const string &op, const Value &lval, const Value &rval) {
-  TypeRank resultingRank = promote(lval, rval);
-  if (!isValidOperation(op, resultingRank)) {
-    throw runtime_error("Error: Operation '" + op +
-                        "' not valid for provided types.");
-  }
-
-  switch (resultingRank) {
-  case TypeRank::INT: {
-    int l = get<int>(lval), r = get<int>(rval);
-    if (op == "+")
-      return l + r;
-    if (op == "-")
-      return l - r;
-    if (op == "*")
-      return l * r;
-    if (op == "/")
-      return r != 0 ? l / r : 0;
-    if (op == "%")
-      return l % r;
-    if (op == "==")
-      return l == r;
-    if (op == "!=")
-      return l != r;
-    if (op == "<")
-      return l < r;
-    if (op == ">")
-      return l > r;
-    if (op == "<=")
-      return l <= r;
-    if (op == ">=")
-      return l >= r;
-    break;
-  }
-  case TypeRank::DOUBLE: {
-    double l =
-        holds_alternative<double>(lval) ? get<double>(lval) : get<int>(lval);
-    double r =
-        holds_alternative<double>(rval) ? get<double>(rval) : get<int>(rval);
-    if (op == "+")
-      return l + r;
-    if (op == "-")
-      return l - r;
-    if (op == "*")
-      return l * r;
-    if (op == "/")
-      return r != 0.0 ? l / r : 0.0;
-    if (op == "==")
-      return l == r;
-    if (op == "!=")
-      return l != r;
-    if (op == "<")
-      return l < r;
-    if (op == ">")
-      return l > r;
-    if (op == "<=")
-      return l <= r;
-    if (op == ">=")
-      return l >= r;
-    break;
-  }
-  case TypeRank::STRING: {
-    string l, r;
-
-    if (holds_alternative<string>(lval)) {
-      l = get<string>(lval);
-    } else if (holds_alternative<double>(lval)) {
-      l = to_string(get<double>(lval));
-    } else if (holds_alternative<int>(lval)) {
-      l = to_string(get<int>(lval));
-    }
-
-    if (holds_alternative<string>(rval)) {
-      r = get<string>(rval);
-    } else if (holds_alternative<double>(rval)) {
-      r = to_string(get<double>(rval));
-    } else if (holds_alternative<int>(rval)) {
-      r = to_string(get<int>(rval));
-    }
-
-    if (op == "+") {
-      return l + r;
-    } else if (op == "==") {
-      return l == r;
-    } else if (op == "!=") {
-      return l != r;
-    }
-    break;
-  }
-  }
-  throw runtime_error("Error: Unhandled binary operation.");
-}
 
 Value BinaryOpNode::evaluate() const {
   Value lval = left->evaluate();
@@ -175,16 +28,7 @@ Value BinaryOpNode::evaluate() const {
 
 Value UnaryOpNode::evaluate() const {
   Value result = right->evaluate();
-
-  if (op == "-") {
-    if (holds_alternative<int>(result))
-      return -get<int>(result);
-    throw runtime_error("Error: Unary '-' can only be applied to integers.");
-  } else if (op == "!") {
-    return !isTruthy(result);
-  }
-  throw runtime_error("Error: Unknown or invalid unary operator " + op);
-  return 0;
+  return applyUnaryOp(op, result);
 }
 
 void PrintNode::evaluate() const {
@@ -298,3 +142,49 @@ void ReturnNode::evaluate() const {
 void BreakNode::evaluate() const { throw BreakException(); }
 
 void ContinueNode::evaluate() const { throw ContinueException(); }
+
+void ExpressionStatementNode::accept(Visitor &v) const {
+  v.visitExpressionStatementNode(this);
+}
+
+void DoubleNode::accept(Visitor &v) const { v.visitDoubleNode(this); }
+
+void NumberNode::accept(Visitor &v) const { v.visitNumberNode(this); }
+
+void StringNode::accept(Visitor &v) const { v.visitStringNode(this); }
+
+void VariableNode::accept(Visitor &v) const { v.visitVariableNode(this); }
+
+void BinaryOpNode::accept(Visitor &v) const { v.visitBinaryOpNode(this); }
+
+void UnaryOpNode::accept(Visitor &v) const { v.visitUnaryOpNode(this); }
+
+void PrintNode::accept(Visitor &v) const { v.visitPrintNode(this); }
+
+void AssignmentNode::accept(Visitor &v) const { v.visitAssignmentNode(this); }
+
+void CreationNode::accept(Visitor &v) const { v.visitCreationNode(this); }
+
+void IfNode::accept(Visitor &v) const { v.visitIfNode(this); }
+
+void TernaryIfNode::accept(Visitor &v) const { v.visitTernaryIfNode(this); }
+
+void BlockNode::accept(Visitor &v) const { v.visitBlockNode(this); }
+
+void WhileNode::accept(Visitor &v) const { v.visitWhileNode(this); }
+
+void FunctionDeclarationNode::accept(Visitor &v) const {
+  v.visitFunctionDeclarationNode(this);
+}
+
+void FunctionCallNode::accept(Visitor &v) const {
+  v.visitFunctionCallNode(this);
+}
+
+void LambdaNode::accept(Visitor &v) const { v.visitLambdaNode(this); }
+
+void ReturnNode::accept(Visitor &v) const { v.visitReturnNode(this); }
+
+void BreakNode::accept(Visitor &v) const { v.visitBreakNode(this); }
+
+void ContinueNode::accept(Visitor &v) const { v.visitContinueNode(this); }

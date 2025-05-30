@@ -20,7 +20,9 @@ void copyPropagation(std::vector<BasicBlock *> &cfg) {
 
     auto resolve = [&](const std::string &name) {
       std::string current = name;
-      while (copies.count(current)) {
+      std::unordered_set<std::string> seen;
+      while (copies.count(current) && !seen.count(current)) {
+        seen.insert(current);
         current = copies[current];
       }
       return current;
@@ -30,31 +32,41 @@ void copyPropagation(std::vector<BasicBlock *> &cfg) {
       switch (instr.opcode) {
       case IROpcode::LOAD_VAR:
       case IROpcode::LOAD_CONST:
-      case IROpcode::CALL:
-      case IROpcode::MAKE_FUNC:
         instr.arg1 = resolve(instr.arg1);
         copies[instr.result] = instr.arg1;
         break;
+
+      case IROpcode::MAKE_FUNC:
+        instr.arg1 = resolve(instr.arg1);
+        break;
+
+      case IROpcode::CALL:
+        instr.arg1 = resolve(instr.arg1);
+        break;
+
       case IROpcode::LOAD_STRING:
         instr.arg1 = resolve(instr.arg1);
-        copies[instr.result] = "\"" + instr.arg1 + "\"";
         break;
+
       case IROpcode::STORE_VAR:
         instr.arg2 = resolve(instr.arg2);
-        copies[instr.arg1] = instr.arg2;
         break;
+
       case IROpcode::UNARY_OP:
         instr.arg1 = resolve(instr.arg1);
         break;
+
       case IROpcode::BINARY_OP:
         instr.arg1 = resolve(instr.arg1);
         instr.arg2 = resolve(instr.arg2);
         break;
+
       case IROpcode::PRINT:
       case IROpcode::RETURN:
       case IROpcode::JUMP_IF_FALSE:
         instr.arg1 = resolve(instr.arg1);
         break;
+
       default:
         break;
       }
@@ -212,6 +224,8 @@ void deadCodeElimination(std::vector<BasicBlock *> &cfg) {
     case IROpcode::JUMP:
     case IROpcode::JUMP_IF_FALSE:
     case IROpcode::LABEL:
+    case IROpcode::FUNC_BEGIN:
+    case IROpcode::FUNC_END:
     case IROpcode::MAKE_FUNC:
       return true;
     default:

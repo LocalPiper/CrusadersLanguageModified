@@ -29,6 +29,7 @@ struct IRInstruction {
   std::string arg1;
   std::string arg2;
   std::string op;
+  std::vector<std::string> captures;
 
   IRInstruction(IROpcode op_, std::string res = "", std::string a1 = "",
                 std::string a2 = "", std::string opStr = "")

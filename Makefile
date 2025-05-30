@@ -21,7 +21,8 @@ SRC_FILES = $(SRC_DIR)/ast.cpp \
 						$(SRC_DIR)/semantic.cpp \
 						$(SRC_DIR)/ir.cpp \
 						$(SRC_DIR)/optimizer.cpp \
-						$(SRC_DIR)/cfg.cpp
+						$(SRC_DIR)/cfg.cpp \
+						$(SRC_DIR)/codegen.cpp
 
 HDR_FILES = $(SRC_DIR)/ast.hpp \
 						$(SRC_DIR)/operations.hpp \
@@ -35,7 +36,8 @@ HDR_FILES = $(SRC_DIR)/ast.hpp \
 						$(SRC_DIR)/ir.hpp \
 						$(SRC_DIR)/ir_struct.hpp \
 						$(SRC_DIR)/optimizer.hpp \
-						$(SRC_DIR)/cfg.hpp
+						$(SRC_DIR)/cfg.hpp \
+						$(SRC_DIR)/codegen.hpp
 
 all: $(BIN_DIR)/clm
 
@@ -55,7 +57,7 @@ run-tests: all
 	@echo "Running tests..."
 	@for test in tests/*.cl2; do \
 		echo "Running $$test..."; \
-		$(BIN_DIR)/clm < $$test; \
+		$(BIN_DIR)/clm $$test; \
 		echo ""; \
 	done
 

@@ -19,6 +19,8 @@ using namespace std;
 
 int yylex();
 
+extern FILE* yyin;
+
 bool is_good = true;
 
 int last_good_line = 1;
@@ -336,17 +338,29 @@ lambda:
 %%
 
 int main(int argc, char* argv[]) {
-  bool irFlag = false;
-  bool optFlag = false;
-  for (int i = 1; i < argc; ++i) {
-    std::string arg = argv[i];
-    if (arg == "-s") {
-      irFlag = true;
+    bool irFlag = false;
+    bool optFlag = false;
+    std::string filename;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "-s") {
+            irFlag = true;
+        } else if (arg == "-O") {
+            optFlag = true;
+        } else if (arg[0] != '-') {
+            filename = arg;
+        }
     }
-    if (arg == "-O") {
-      optFlag = true;
+
+    if (!filename.empty()) {
+        yyin = fopen(filename.c_str(), "r");
+        if (!yyin) {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return 1;
+        }
     }
-  }
+
   if (yyparse() == 0 && root && is_good) {
     enterScope();
     initialize_builtins();

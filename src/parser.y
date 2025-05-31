@@ -377,9 +377,6 @@ int main(int argc, char* argv[]) {
         if (optFlag) {
           irg.code = optimize(irg.code);
         }
-        printIR(irg.code);
-        std::cout << "\n";
-        irg.debugIR();
         writeAsm(irg.code);
       }
     } catch (const std::runtime_error &exc) {

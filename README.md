@@ -238,7 +238,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 4   | Optimizer: constant folding             | Implement constant folding during or after IR generation to simplify expressions                                                   | ⚙️ Mandatory | ✅ DONE |
 | 5   | Optimizer: dead code elimination        | Remove unreachable code for minimal optimization                                                                        | ✨ Additional | ✅ DONE |
 | 6   | Optimizer: copy propagation        | Inline variables where needed   | ✨ Additional | ✅ DONE |
-| 7   | ASM generator: implementation           | Convert optimized IR into RISCV32 ASM for emulation  | ⚙️ Mandatory | 🛠️ IN PROGRESS |
+| 7   | ASM generator: implementation           | Convert optimized IR into RISCV32 ASM for emulation  | ⚙️ Mandatory | ✅ DONE |
 | 8   | ASM generator: builtin support           | Find a way to call builtin functions like `array`, `generate_array` and `size`  | ⚙️ Mandatory | ❌ NOT IMPLEMENTED |
 | 9   | Optimizer: jump simplification        | Remove redundant jumps. Implement when other work is done | ✨ Additional | ❌ NOT IMPLEMENTED |
 | 10  | Optimizer: common subexpression elimination        | Allow expression hashing to avoid recomputation. Implement when other work is done | ✨ Additional | ❌ NOT IMPLEMENTED |

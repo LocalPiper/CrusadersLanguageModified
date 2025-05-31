@@ -220,7 +220,7 @@ Tasks can be mandatory (features that WILL be implemented) and additional (featu
 | 5   | Parser + Interpreter: arrays support          | Add arrays support. User should be able to iterate over arrays and strings  | ⚙️ Mandatory   | ✅ DONE         |
 | 6   | Parser + Interpreter: functions support          | Add functions support  | ⚙️ Mandatory   | ✅ DONE         |
 | 7   | Tester: cover with tests          | Come up with tests for the language. Try reaching maximum test coverage  | ⚙️ Mandatory   | 🛠️ IN PROGRESS         |
-| 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | 🛠️ IN PROGRESS         |
+| 8   | Parser: comments         | Add comments support. Both single line and multiline  | ✨ Additional   | ✅ DONE         |
 | 9   | Parser + Interpreter: ternary IF         | Add ternary IF support. Syntax: (condition)? true : false  | ✨ Additional   | ✅ DONE         |
 | 10   | Parser + Interpreter: for loops          | Add 'for' loops. 'For' loops are desugared while loops  | ✨ Additional   | ✅ DONE         |
 | 11   | Parser + Interpreter: break/continue          | Add ability to break loops and continue iteration | ✨ Additional   | ✅ DONE         |
